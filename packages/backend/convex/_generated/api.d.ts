@@ -8,6 +8,7 @@
  * @module
  */
 
+import type * as lib_constant from "../lib/constant.js";
 import type * as lib_extractTextContent from "../lib/extractTextContent.js";
 import type * as private_conversation from "../private/conversation.js";
 import type * as private_files from "../private/files.js";
@@ -22,6 +23,7 @@ import type * as system_ai_rag from "../system/ai/rag.js";
 import type * as system_conversation from "../system/conversation.js";
 import type * as system_tools_escalateConversation from "../system/tools/escalateConversation.js";
 import type * as system_tools_resolveConversation from "../system/tools/resolveConversation.js";
+import type * as system_tools_searchTool from "../system/tools/searchTool.js";
 import type * as users from "../users.js";
 
 import type {
@@ -39,6 +41,7 @@ import type {
  * ```
  */
 declare const fullApi: ApiFromModules<{
+  "lib/constant": typeof lib_constant;
   "lib/extractTextContent": typeof lib_extractTextContent;
   "private/conversation": typeof private_conversation;
   "private/files": typeof private_files;
@@ -53,6 +56,7 @@ declare const fullApi: ApiFromModules<{
   "system/conversation": typeof system_conversation;
   "system/tools/escalateConversation": typeof system_tools_escalateConversation;
   "system/tools/resolveConversation": typeof system_tools_resolveConversation;
+  "system/tools/searchTool": typeof system_tools_searchTool;
   users: typeof users;
 }>;
 declare const fullApiWithMounts: typeof fullApi;

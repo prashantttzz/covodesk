@@ -6,6 +6,7 @@ import { paginationOptsValidator } from "convex/server";
 import { resolveConversation } from "../system/tools/resolveConversation";
 import { escalateConversation } from "../system/tools/escalateConversation";
 import { saveMessage } from "@convex-dev/agent";
+import { search } from "../system/tools/searchTool";
 
 export const messages = action({
   args: {
@@ -53,8 +54,9 @@ export const messages = action({
         {
           prompt: args.prompt,
           tools: {
-            resolveConversation,
-            escalateConversation,
+            resolveConversationTool: resolveConversation,
+            escalateConversationTool: escalateConversation,
+            searchTool: search,
           },
         }
       );

@@ -6,6 +6,7 @@ import { saveMessage } from "@convex-dev/agent";
 import { components } from "../_generated/api";
 import { generateText } from "ai";
 import { google } from "@ai-sdk/google";
+import { OPERATOR_MESSAGE_ENHANCEMENT_PROMPT } from "../lib/constant";
 
 export const getMany = query({
   args: {
@@ -133,8 +134,7 @@ export const enhanceResponse = action({
       messages: [
         {
           role: "system",
-          content:
-            "enhance this operators message to be more proffesional, clear and helpful white maintaining thier intent and key information and return only enhanced message no extra text and information",
+          content: OPERATOR_MESSAGE_ENHANCEMENT_PROMPT
         },
         {
           role: "user",
