@@ -1,9 +1,5 @@
 import { Button } from "@workspace/ui/components/button";
-import {
-  ArrowLeftRightIcon,
-  LucideIcon,
-  PlugIcon,
-} from "lucide-react";
+import { ArrowLeftRightIcon, LucideIcon, PlugIcon } from "lucide-react";
 import Image from "next/image";
 import React from "react";
 

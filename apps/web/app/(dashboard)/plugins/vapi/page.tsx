@@ -1,5 +1,7 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
+"use client";
 import PluginCard, { type Feature } from "@/components/PluginCard";
+import VapiConnectView from "@/components/vapi-connect-view";
 import { api } from "@workspace/backend/_generated/api";
 import { Button } from "@workspace/ui/components/button";
 import {
@@ -13,6 +15,7 @@ import {
   FormControl,
   FormField,
   FormItem,
+  Form,
   FormMessage,
 } from "@workspace/ui/components/form";
 import { Input } from "@workspace/ui/components/input";
@@ -25,7 +28,7 @@ import {
   WorkflowIcon,
 } from "lucide-react";
 import React, { useState } from "react";
-import { Form, useForm } from "react-hook-form";
+import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { z } from "zod";
 const vapiFeature: Feature[] = [
@@ -79,8 +82,8 @@ const VapiPluginForm = ({
           privateApiKey: value.privateApiKey,
         },
       });
-      setOpen(false)
-      toast.success("vapi secret created")
+      setOpen(false);
+      toast.success("vapi secret created");
     } catch (error) {
       console.error(error);
       toast.error("something went wrong");
@@ -144,6 +147,40 @@ const VapiPluginForm = ({
     </Dialog>
   );
 };
+const VapiPluginRemoveForm = ({
+  open,
+  setOpen,
+}: {
+  open: boolean;
+  setOpen: (value: boolean) => void;
+}) => {
+  const removePlugin = useMutation(api.private.plugins.remove);
+  const onSubmit = async () => {
+    try {
+      await removePlugin({ service: "vapi" });
+      setOpen(false);
+      toast.success("vapi plugin disconnected");
+    } catch (error) {
+      console.error(error);
+      toast.error("something went wrong");
+    }
+  };
+  return (
+    <Dialog onOpenChange={setOpen} open={open}>
+      <DialogContent>
+        <DialogHeader>disconnect Vapi</DialogHeader>
+        <DialogDescription>
+          are you sure you want to disconnect vapi plugin?{" "}
+        </DialogDescription>
+      <DialogFooter>
+        <Button onClick={onSubmit} variant="destructive">
+          Disconnect
+        </Button>
+      </DialogFooter>
+      </DialogContent>
+    </Dialog>
+  );
+};
 
 const VapiPlugin = () => {
   const [connect, setConnect] = useState(false);
@@ -159,6 +196,7 @@ const VapiPlugin = () => {
   return (
     <>
       <VapiPluginForm setOpen={setConnect} open={connect} />
+      <VapiPluginRemoveForm setOpen={setRemove} open={remove} />
       <div className="flex min-h-screen flex-col w-full bg-muted p-8">
         <div className="mx-auto w-full max-w-screen-md">
           <div className="space-y-2">
@@ -170,7 +208,8 @@ const VapiPlugin = () => {
           </div>
           <div className="mt-8 ">
             {vapiPlugin ? (
-              <div>connectec!</div>
+              // "connected"
+              <VapiConnectView onDisconnect={handleSubmit} />
             ) : (
               <PluginCard
                 serviceImage="/vapi.jpg"
