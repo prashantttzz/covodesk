@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useMemo } from "react";
 import { WidgetHeader } from "./widget-header";
 import { ArrowLeft, MenuIcon } from "lucide-react";
 import { useAtomValue, useSetAtom } from "jotai";
@@ -24,9 +24,14 @@ import {
   conversationIdAtom,
   organizationIdAtom,
   screenAtom,
+  widgetSettingsAtom,
 } from "./widget-atom";
 import { Button } from "@workspace/ui/components/button";
 import { useAction, useQuery } from "convex/react";
+import {
+  AISuggestions,
+  AISuggestion,
+} from "@workspace/ui/components/ai/suggestion";
 import { api } from "@workspace/backend/_generated/api";
 import { z } from "zod";
 import { useForm } from "react-hook-form";
@@ -41,6 +46,7 @@ const formSchema = z.object({
 const WidgetChatScreen = () => {
   const conversationId = useAtomValue(conversationIdAtom);
   const organizationId = useAtomValue(organizationIdAtom);
+  const widgetSettings = useAtomValue(widgetSettingsAtom);
   const setConversationId = useSetAtom(conversationIdAtom);
   const setScreen = useSetAtom(screenAtom);
   const contactSessionId = useAtomValue(
@@ -78,6 +84,17 @@ const WidgetChatScreen = () => {
     setConversationId(null);
     setScreen("selection");
   };
+
+  const suggestions = useMemo(() => {
+    if (!widgetSettings) {
+      return [];
+    }
+    return Object.keys(widgetSettings.defaultSuggestions).map((key) => {
+      return widgetSettings.defaultSuggestions[
+        key as keyof typeof widgetSettings.defaultSuggestions
+      ];
+    });
+  }, [widgetSettings]);
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -134,6 +151,30 @@ const WidgetChatScreen = () => {
           })}
         </AIConversationContent>
       </AIConversation>
+      {toUIMessages(messages.results??[])?.length===1&& (
+
+        <AISuggestions className="flex flex-col w-full items-end p-2">
+        {suggestions.map((suggestion) => {
+          if (!suggestion) {
+            return null;
+          }
+          return (
+            <AISuggestion
+              key={suggestion}
+              onClick={() => {
+                form.setValue("message",suggestion,{
+                  shouldValidate:true,
+                  shouldDirty:true,
+                  shouldTouch:true
+                })
+                form.handleSubmit(onSubmit)();
+              }}
+              suggestion={suggestion}
+            ></AISuggestion>
+          );
+        })}
+      </AISuggestions>
+      ) }
       <Form {...form}>
         <AIInput
           className="rounded-none border-x-0 border-b-0"

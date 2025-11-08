@@ -1,14 +1,16 @@
 import React, { useState } from "react";
 import { WidgetHeader } from "./widget-header";
 import { Button } from "@workspace/ui/components/button";
-import { ChevronRightIcon, MessageSquareTextIcon } from "lucide-react";
+import { ChevronRightIcon, MessageSquareTextIcon, MicIcon, PhoneIcon } from "lucide-react";
 import { useAtomValue, useSetAtom } from "jotai";
 import {
   contactSessionIdFamily,
   conversationIdAtom,
   errorAtom,
+  hasVapiSecretsAtom,
   organizationIdAtom,
   screenAtom,
+  widgetSettingsAtom,
 } from "./widget-atom";
 import { useMutation } from "convex/react";
 import { api } from "@workspace/backend/_generated/api";
@@ -18,6 +20,8 @@ const WidgetSelectionScreen = () => {
   const setConversationId = useSetAtom(conversationIdAtom);
   const setErrorMessage = useSetAtom(errorAtom);
   const organizationId = useAtomValue(organizationIdAtom);
+  const widgetSettings = useAtomValue(widgetSettingsAtom)
+  const hasVapiSecrets = useAtomValue(hasVapiSecretsAtom)
   const contactSessionId = useAtomValue(
     contactSessionIdFamily(organizationId || "")
   );
@@ -49,7 +53,6 @@ const WidgetSelectionScreen = () => {
       setIsPending(false)
     }
   };
-
   return (
     <>
       <WidgetHeader>
@@ -71,6 +74,34 @@ const WidgetSelectionScreen = () => {
           </div>
           <ChevronRightIcon />
         </Button>
+      {hasVapiSecrets && widgetSettings?.vapiSettings.assistantId && (
+          <Button
+          variant="outline"
+          className="h-16 w-full justify-between"
+          onClick={()=>setScreen("voice")}
+          disabled={isPending}
+        >
+          <div className="flex items-center  gap-x-2">
+            <MicIcon />
+            <span>Start voice call</span>
+          </div>
+          <ChevronRightIcon />
+        </Button>
+      )}
+      {hasVapiSecrets && widgetSettings?.vapiSettings.phoneNumber && (
+          <Button
+          variant="outline"
+          className="h-16 w-full justify-between"
+          onClick={()=>setScreen("contact")}
+          disabled={isPending}
+        >
+          <div className="flex items-center  gap-x-2">
+            <PhoneIcon />
+            <span>Call us</span>
+          </div>
+          <ChevronRightIcon />
+        </Button>
+      )}
       </div>
     </>
   );

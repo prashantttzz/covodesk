@@ -9,6 +9,8 @@ import WidgetLoadingScreen from "@/components/widget-loadingScreen";
 import WidgetSelectionScreen from "@/components/widget-selectionScreen";
 import { useAtomValue } from "jotai";
 import { JSX } from "react";
+import WidgetVoiceScreen from "./widget-voiceScreen";
+import WidgetContactScreen from "./widget-contactSrceen";
 
 type ScreenType = 'error' | 'loading' | 'contact' | 'chat' | 'voice' | 'inbox' | 'auth' | 'selection';
 
@@ -17,16 +19,16 @@ const WidgetHomeScreen = ({organizationId}:{organizationId:string}) => {
   const screenComponent: Record<ScreenType, JSX.Element> = {
     error: <WidgetErrorScreen/>,
     loading:<WidgetLoadingScreen organizationId={organizationId}/>,
-    contact: <p> error</p>,
+    contact: <WidgetContactScreen/>,
     chat: <WidgetChatScreen/>,
-    voice: <p> error</p>,
+    voice: <WidgetVoiceScreen/>,
     inbox:<WidgetInboxScreen/>,
     auth: <WidgetAuthScreen />,
     selection: <WidgetSelectionScreen/>,
   };
 
   return (
-    <main className="min-h-screen flex h-full w-full flex-col overflow-hidden rounded-xl border bg-muted">
+    <main className=" flex h-full w-full flex-col overflow-hidden rounded-xl border bg-muted">
       {screenComponent[screen]}
       <WidgetFooter />
     </main>

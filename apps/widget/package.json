@@ -13,7 +13,7 @@
   },
   "dependencies": {
     "@convex-dev/agent": "^0.1.16",
-    "@hookform/resolvers": "^5.2.1",
+    "@hookform/resolvers": "3.3.4",
     "@vapi-ai/web": "^2.3.8",
     "@workspace/backend": "workspace:*",
     "@workspace/ui": "workspace:*",
