@@ -70,9 +70,9 @@ export const INTEGRATION = [
 ];
 
 export type integrationId = (typeof INTEGRATION)[number]["id"];
-export const HTML_SNIPPET = `<script src="https://yourdomain.com/widget.js" data-organization-id="YOUR_ORG_ID"></script>`;
+export const HTML_SCRIPT = `<script src="https://yourdomain.com/widget.js" data-organization-id="YOUR_ORG_ID"></script>`;
 
-export const REACT_SNIPPET = `
+export const REACT_SCRIPT = `
 import { useEffect } from "react";
 export default function EchoWidget({ organizationId }) {
   useEffect(() => {
@@ -88,7 +88,7 @@ export default function EchoWidget({ organizationId }) {
   return null;
 }`;
 
-export const NEXTJS_SNIPPET = `
+export const NEXTJS_SCRIPT= `
 "use client";
 import { useEffect } from "react";
 export function EchoWidget({ organizationId }) {
@@ -105,7 +105,7 @@ export function EchoWidget({ organizationId }) {
 }
 `;
 
-export const JAVASCRIPT_SNIPPET = `
+export const JAVASCRIPT_SCRIPT = `
 (function () {
   if (document.getElementById("echo-widget-script")) return;
   var s = document.createElement("script");
