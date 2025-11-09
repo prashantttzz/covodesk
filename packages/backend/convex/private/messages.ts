@@ -3,7 +3,7 @@ import { action, mutation, query } from "../_generated/server";
 import { supportAgent } from "../system/ai/SupportAgent";
 import { paginationOptsValidator } from "convex/server";
 import { saveMessage } from "@convex-dev/agent";
-import { components } from "../_generated/api";
+import { components, internal } from "../_generated/api";
 import { generateText } from "ai";
 import { google } from "@ai-sdk/google";
 import { OPERATOR_MESSAGE_ENHANCEMENT_PROMPT } from "../lib/constant";
@@ -129,12 +129,22 @@ export const enhanceResponse = action({
         message: "organizationID not found",
       });
     }
+    const subscription = await ctx.runQuery(
+      internal.system.subscription.getByOrganizationId,
+      { organizationId: org }
+    );
+    if (subscription?.status !== "active") {
+      throw new ConvexError({
+        code: "UNAUTHORIZED",
+        message: "missing subscription",
+      });
+    }
     const response = await generateText({
       model: google("gemini-2.5-flash"),
       messages: [
         {
           role: "system",
-          content: OPERATOR_MESSAGE_ENHANCEMENT_PROMPT
+          content: OPERATOR_MESSAGE_ENHANCEMENT_PROMPT,
         },
         {
           role: "user",

@@ -46,7 +46,12 @@ export const messages = action({
       });
     }
 
-    const shouldTriggeragent = conversation.status === "unresolved";
+    const subscription = await ctx.runQuery(
+      internal.system.subscription.getByOrganizationId,
+      { organizationId: conversation.organizationId }
+    );
+    const shouldTriggeragent =
+      conversation.status === "unresolved" && subscription?.status === "active";
     if (shouldTriggeragent) {
       await supportAgent.generateText(
         ctx,

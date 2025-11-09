@@ -63,7 +63,7 @@ const Files = () => {
   return (
     <Protect
       condition={(has) => has({ plan: "pro" })}
-      fallback={<PremiumFeatureOverlay>k </PremiumFeatureOverlay>}
+      fallback={<PremiumFeatureOverlay>k</PremiumFeatureOverlay>}
     >
       <>
         <UploadDialog

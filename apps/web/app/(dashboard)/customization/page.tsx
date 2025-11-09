@@ -1,5 +1,7 @@
 "use client";
 import CustomizationForm from "@/components/CustomizationForm";
+import PremiumFeatureOverlay from "@/components/premium-feature-overlay";
+import { Protect } from "@clerk/nextjs";
 import { api } from "@workspace/backend/_generated/api";
 import { useQuery } from "convex/react";
 import { Loader2Icon } from "lucide-react";
@@ -19,6 +21,10 @@ const WidgetCustomization = () => {
     );
   }
   return (
+     <Protect
+          condition={(has) => has({ plan: "pro" })}
+          fallback={<PremiumFeatureOverlay>k </PremiumFeatureOverlay>}
+        >
     <div className="flex min-h-screen w-full flex-col bg-muted p-8">
       <div className="max-w-screen-md mx-auto w-full">
         <div className="space-y-2">
@@ -32,6 +38,7 @@ const WidgetCustomization = () => {
         </div>
       </div>
     </div>
+    </Protect>
   );
 };
 

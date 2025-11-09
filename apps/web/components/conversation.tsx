@@ -33,6 +33,7 @@ import { useInfinteScroll } from "@workspace/ui/hooks/use-infinite-scroll";
 import InfiniteScrollTrigger from "@workspace/ui/components/InfiniteScrollTrigger";
 import { cn } from "@workspace/ui/lib/utils";
 import { Skeleton } from "@workspace/ui/components/skeleton";
+import { toast } from "sonner";
 const formSchema = z.object({
   message: z.string().min(2, "message is required"),
 });
@@ -61,6 +62,7 @@ const Conversation = ({
       });
       form.reset();
     } catch (error) {
+      toast.error("someting went wrong");
       console.error(error);
     }
   };
