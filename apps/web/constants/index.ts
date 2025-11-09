@@ -70,7 +70,7 @@ export const INTEGRATION = [
 ];
 
 export type integrationId = (typeof INTEGRATION)[number]["id"];
-export const HTML_SCRIPT = `<script src="https://convodesk-widget.vercel.app/widget.js" data-organization-id="YOUR_ORG_ID"></script>`;
+export const HTML_SCRIPT = `<script src="https://convodesk-widget.pages.dev/widget.js" data-organization-id="YOUR_ORG_ID"></script>`;
 
 export const REACT_SCRIPT = `
 import { useEffect } from "react";
@@ -79,7 +79,7 @@ export default function EchoWidget({ organizationId }) {
     if (document.getElementById("echo-widget-script")) return;
     const s = document.createElement("script");
     s.id = "echo-widget-script";
-    s.src = "https://convodesk-widget.vercel.app/widget.js";
+    s.src = "https://convodesk-widget.pages.dev/widget.js";
     s.async = true;
     s.setAttribute("data-organization-id", organizationId);
     document.body.appendChild(s);
@@ -96,7 +96,7 @@ export function EchoWidget({ organizationId }) {
     if (document.getElementById("echo-widget-script")) return;
     const s = document.createElement("script");
     s.id = "echo-widget-script";
-    s.src = "https://convodesk-widget.vercel.app/widget.js";
+    s.src = "https://convodesk-widget.pages.dev/widget.js";
     s.async = true;
     s.setAttribute("data-organization-id", organizationId);
     document.body.appendChild(s);
@@ -110,7 +110,7 @@ export const JAVASCRIPT_SCRIPT = `
   if (document.getElementById("echo-widget-script")) return;
   var s = document.createElement("script");
   s.id = "echo-widget-script";
-  s.src = "https://convodesk-widget.vercel.app/widget.js";
+  s.src = "https://convodesk-widget.pages.dev/widget.js";
   s.async = true;
   s.setAttribute("data-organization-id", "YOUR_ORG_ID");
   document.body.appendChild(s);
