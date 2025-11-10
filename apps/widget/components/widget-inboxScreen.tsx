@@ -65,7 +65,7 @@ const WidgetInboxScreen = () => {
                   <p className="truncate text-sm">
                     {conversation.lastMessage?.text}
                   </p>
-                  <StatusConversation status={conversation.status}/>
+                  <StatusConversation status={conversation.status} />
                 </div>
               </div>
             </Button>

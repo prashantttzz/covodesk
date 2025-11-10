@@ -58,13 +58,13 @@ const WidgetSelectionScreen = () => {
       <WidgetHeader>
         <div className="flex flex-1 flex-col justify-between gap-y-2 px-2 py-6">
           <p className="font-semibold text-3xl">Hi there! </p>
-          <p className="text-xl"> het&apos;s get you started</p>
+          <p className="text-xl"> let&apos;s get you started</p>
         </div>
       </WidgetHeader>
       <div className="flex flex-1 flex-col gap-y-4 p-4 overflow-y-auto">
         <Button
           variant="outline"
-          className="h-16 w-full justify-between"
+          className="h-16 w-full glass-light !bg-card justify-between"
           onClick={handleConversations}
           disabled={isPending}
         >
@@ -77,7 +77,7 @@ const WidgetSelectionScreen = () => {
       {hasVapiSecrets && widgetSettings?.vapiSettings.assistantId && (
           <Button
           variant="outline"
-          className="h-16 w-full justify-between"
+          className="h-16 w-full justify-between !bg-card glass-light"
           onClick={()=>setScreen("voice")}
           disabled={isPending}
         >

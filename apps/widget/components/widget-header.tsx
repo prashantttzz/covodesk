@@ -10,7 +10,7 @@ export const WidgetHeader = ({
   return (
     <header
       className={cn(
-        "bg-gradient-to-b from-primary to-[#0b63f3] text-primary-foreground p-4",
+        "glass-light !bg-card text-white rounded-t-2xl p-4",
         className
       )}
     >

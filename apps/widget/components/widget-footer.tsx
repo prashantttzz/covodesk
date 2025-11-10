@@ -11,7 +11,7 @@ const WidgetFooter = () => {
   const setScreen = useSetAtom(screenAtom);
 
   return (
-    <footer className="flex items-center justify-between border-t bg-background">
+    <footer className="flex items-center justify-between border-t glass-light !bg-card">
       <Button className="h-14 flex-1 rounded-none"
       size="icon"
       variant="ghost">
