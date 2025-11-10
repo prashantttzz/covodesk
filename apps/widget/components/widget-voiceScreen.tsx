@@ -5,7 +5,7 @@ import { screenAtom } from "./widget-atom";
 import { useVapi } from "@/hooks/use-vapi";
 import { WidgetHeader } from "./widget-header";
 import { Button } from "@workspace/ui/components/button";
-import { ArrowLeftIcon, MicIcon, MicOffIcon } from "lucide-react";
+import { ArrowLeftIcon, Loader, MicIcon, MicOffIcon } from "lucide-react";
 import { cn } from "@workspace/ui/lib/utils";
 import {
   AIConversation,
@@ -19,7 +19,8 @@ import {
 
 const WidgetVoiceScreen = () => {
   const setScreen = useSetAtom(screenAtom);
-  const { transcript, isSpeaking, connected, startCall, endCall } = useVapi();
+  const { transcript, isSpeaking, connected, startCall, endCall, connecting } =
+    useVapi();
   return (
     <>
       <WidgetHeader>
@@ -88,13 +89,18 @@ const WidgetVoiceScreen = () => {
             ) : (
               <Button
                 className="w-full"
-                disabled={connected}
+                disabled={connected ||connecting}
                 size="lg"
                 onClick={() => startCall()}
               >
-                {" "}
-                <MicIcon />
-                Start Call
+                {connecting ? (
+                  <Loader className="animate-spin" />
+                ) : (
+                  <>
+                    <MicIcon />
+                    Start Call
+                  </>
+                )}
               </Button>
             )}
           </div>
