@@ -72,7 +72,7 @@ const UplaodDialog = ({
   };
   return (
     <Dialog onOpenChange={onOpenChange} open={open}>
-      <DialogContent className="sm:max-w-lg">
+      <DialogContent className="sm:max-w-lg glass-dialog">
         <DialogHeader>
           <DialogTitle>Upload document</DialogTitle>
           <DialogDescription>
@@ -94,7 +94,7 @@ const UplaodDialog = ({
               value={uploadForm.category}
             />
           </div>
-          <div className="space-y-2">
+          <div className="space-y-2 mt-5">
             <Label htmlFor="filename">
               FileName{" "}
               <span className="text-muted-foreground text-xs">(optional)</span>
@@ -126,7 +126,7 @@ const UplaodDialog = ({
           </Dropzone>
         </div>
         <DialogFooter>
-          <Button onClick={handleCancel} disabled={uploading} variant="outline">
+          <Button onClick={handleCancel} disabled={uploading} variant="outline" className="glass-light">
             Cancel
           </Button>
           <Button

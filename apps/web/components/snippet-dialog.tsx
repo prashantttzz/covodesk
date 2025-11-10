@@ -29,7 +29,7 @@ export const SnnipetDialog = ({
   };
   return (
     <Dialog onOpenChange={onOpenChange} open={open}>
-      <DialogContent>
+      <DialogContent className="glass-light !bg-card">
         <DialogHeader>
           <DialogTitle>integration with your website</DialogTitle>
           <DialogDescription>
@@ -43,7 +43,7 @@ export const SnnipetDialog = ({
               1. Copy the following code
             </div>
             <div className="group relative">
-              <pre className="max-h-[300px] overflow-x-auto overflow-y-auto whitespace-pre-wrap break-all rounded-md bg-foreground p-2 font-mono  text-secondary text-sm">
+              <pre className="max-h-[300px] overflow-x-auto overflow-y-auto whitespace-pre-wrap break-all rounded-md bg-background text-white p-2 font-mono  text-sm">
                 {snippet}
               </pre>
               <Button
@@ -58,7 +58,7 @@ export const SnnipetDialog = ({
           </div>
           <div className="space-y-2">
             <div className="rounded-md bg-accent p-2 text-sm">
-              2. ad the code in your page
+              2. add the code in your page
             </div>
             <p className="text-muted-foreground tet"></p>
           </div>

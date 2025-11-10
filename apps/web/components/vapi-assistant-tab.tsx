@@ -28,7 +28,7 @@ const VapiAssistantTab = () => {
     }
   };
   return (
-    <div className="border-t bg-background">
+    <div  className=" !bg-card">
       <Table>
         <TableHeader>
           <TableRow>
@@ -75,7 +75,9 @@ const VapiAssistantTab = () => {
                   </div>
                 </TableCell>
                 <TableCell className="px-6 py-4">
-                  {assistant?.model?.model || ""}
+              <Badge className="glass-light p-1 text-white">
+                    {assistant?.model?.model || ""}
+              </Badge>
                 </TableCell>
                 <TableCell className="px-6 py-4 truncate">
 <span className="truncate">

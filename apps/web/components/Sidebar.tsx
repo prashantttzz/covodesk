@@ -34,26 +34,34 @@ const DashboardSidebar: FC = () => {
   };
 
   return (
-    <Sidebar collapsible="icon" className="group">
-      <SidebarHeader>
+    <Sidebar collapsible="icon" className="group glass-deep">
+      <SidebarHeader className="bg-sidebar">
         <SidebarMenu>
           <SidebarMenuItem>
             <SidebarMenuButton size="lg" asChild>
-              <OrganizationSwitcher hidePersonal skipInvitationScreen  appearance={{
-                elements:{
-                  rootBox: "w-full! h-8!",
-                  avatarBox:"size-4! rounded-sm!",
-                  organizationSwitcherTrigger:"w-full! justify-start! group-data-[collapsible=icon]:size-8! group-data-[collapsible=icon]:p-2!",
-                  organizationPreview:" group-data-[collapsible=icon]:justify-center! gap-2!",
-                  organizationPreviewTextContainer:"group-data-[collapsible=icon]:hidden! text-xs! font-medium! teext-sidebar-foreground!",
-                  organizationSwitcherTriggerIcon:"group-data-[collapsible=icon]:hidden! ml-auto!",
-                }
-              }}/>
+              <OrganizationSwitcher
+                hidePersonal
+                skipInvitationScreen
+                appearance={{
+                  elements: {
+                    rootBox: "w-full! h-8!",
+                    avatarBox: "size-4! rounded-sm!",
+                    organizationSwitcherTrigger:
+                      "w-full! justify-start! group-data-[collapsible=icon]:size-8! group-data-[collapsible=icon]:p-2!",
+                    organizationPreview:
+                      " group-data-[collapsible=icon]:justify-center! gap-2!",
+                    organizationPreviewTextContainer:
+                      "group-data-[collapsible=icon]:hidden! text-xs! text-white font-medium! teext-sidebar-foreground!",
+                    organizationSwitcherTriggerIcon:
+                      "group-data-[collapsible=icon]:hidden! text-white ml-auto!",
+                  },
+                }}
+              />
             </SidebarMenuButton>
           </SidebarMenuItem>
         </SidebarMenu>
       </SidebarHeader>
-      <SidebarContent>
+      <SidebarContent className="bg-sidebar">
         <SidebarGroup>
           <SidebarGroupLabel>Customer Support</SidebarGroupLabel>
           <SidebarGroupContent>
@@ -64,7 +72,7 @@ const DashboardSidebar: FC = () => {
                     asChild
                     isActive={isActive(item.url)}
                     tooltip={item.title}
-                    className={cn(isActive(item.url) && "bg-gradient-to-b from-sidebar-primary to-[#0b63f3]! text-sidebar-primary-foreground! hover:to-[#0b63f3]/90!")}
+                    className={cn(isActive(item.url) && "glass-light")}
                   >
                     <Link href={item.url}>
                       <item.icon className="size-4" />
@@ -86,7 +94,7 @@ const DashboardSidebar: FC = () => {
                     asChild
                     isActive={isActive(item.url)}
                     tooltip={item.title}
-                     className={cn(isActive(item.url) && "bg-gradient-to-b from-sidebar-primary to-[#0b63f3]! text-sidebar-primary-foreground! hover:to-[#0b63f3]/90!")}
+                    className={cn(isActive(item.url) && "glass-light")}
                   >
                     <Link href={item.url}>
                       <item.icon className="size-4" />
@@ -108,7 +116,7 @@ const DashboardSidebar: FC = () => {
                     asChild
                     isActive={isActive(item.url)}
                     tooltip={item.title}
-                     className={cn(isActive(item.url) && "bg-gradient-to-b from-sidebar-primary to-[#0b63f3]! text-sidebar-primary-foreground! hover:to-[#0b63f3]/90!")}
+                    className={cn(isActive(item.url) && "glass-light")}
                   >
                     <Link href={item.url}>
                       <item.icon className="size-4" />
@@ -124,16 +132,21 @@ const DashboardSidebar: FC = () => {
       <SidebarFooter>
         <SidebarMenu>
           <SidebarMenuItem>
-            <UserButton showName appearance={{
-              elements:{
-                rootBox:"w-full! h-8!",
-                userButtonTrigger:"w-full! p-2! hover:bg-sidebar-accent! hover:text-sidebar-accent-foreground! group-data-[collapsible=icon]:size-8! group-data-[collapsible=icon]:p-2!",
-                userButtonBox:"w-full! flex-row-reverse! justify-end! gap-2! group-data-[collapsible=icon]:justify-center! text-sidebar-foreground!",
-                userButtonOuterIdentifier:"pl-0! group-data-[collapsible=icon]:hidden!",
-                avatarBox:"size-8!"
-
-              }
-            }}/>
+            <UserButton
+              showName
+              appearance={{
+                elements: {
+                  rootBox: "w-full! h-8!",
+                  userButtonTrigger:
+                    "w-full! p-2! hover:bg-sidebar-accent! hover:text-sidebar-accent-foreground! group-data-[collapsible=icon]:size-8! group-data-[collapsible=icon]:p-2!",
+                  userButtonBox:
+                    "w-full! flex-row-reverse! justify-end! gap-2! group-data-[collapsible=icon]:justify-center! text-sidebar-foreground!",
+                  userButtonOuterIdentifier:
+                    "pl-0! group-data-[collapsible=icon]:hidden!",
+                  avatarBox: "size-8!",
+                },
+              }}
+            />
           </SidebarMenuItem>
         </SidebarMenu>
       </SidebarFooter>

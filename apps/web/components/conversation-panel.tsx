@@ -51,7 +51,7 @@ export const ConversationPanel = () => {
     observerEnabled: true,
   });
   return (
-    <div className="flex flex-col h-full w-full bg-background text-sidebar-foreground">
+    <div className="flex flex-col h-full w-full glass-chat text-sidebar-foreground">
       <div className="flex flex-col gap-3.5 border-b p-2">
         <Select
           defaultValue="all"
@@ -143,7 +143,7 @@ export const ConversationPanel = () => {
                           className={cn(
                             " text-xs truncate text-muted-foreground",
                             !isLastMessageFromOperator &&
-                              "font-bold text-md text-black"
+                              "font-bold text-md text-blue-500"
                           )}
                         >
                           {conversation.lastMessage?.text}

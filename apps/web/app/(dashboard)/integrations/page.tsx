@@ -38,7 +38,7 @@ const Integration = () => {
   return (
     <>
     <SnnipetDialog open={dialogOpen} onOpenChange={setDialogOpen} snippet={selectedSnippet}/>
-    <div className="flex w-full min-h-screen flex-col p-8 bg-muted">
+    <div className="flex w-full min-h-screen flex-col p-8 bg-card">
       <div className="mx-auto w-full max-w-screen-md">
         <div className="space-y-2">
           <h1 className="text-2xl md:text-4xl">Setup and Integration</h1>
@@ -76,7 +76,7 @@ const Integration = () => {
               <button
                 key={integration.id}
                 onClick={()=>handleIntegrationClick(integration.id)}
-                className="flex items-center gap-4 rounded-lg border bg-background p-4 hover:bg-accent"
+                className="flex items-center gap-4 glass-light p-4 rounded-3xl hover:bg-background"
               >
                 <Image
                   src={integration.icon}

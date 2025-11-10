@@ -27,17 +27,35 @@ export const AIMessageContent = ({
 }: AIMessageContentProps) => (
   <div
     className={cn(
-      "break-words",
-      "flex flex-col gap-2 rounded-lg border border-border px-3 py-2 text-sm",
-      "bg-background text-foreground",
-      "group-[.is-user]:border-transparent group-[.is-user]:bg-gradient-to-b group-[.is-user]:from-primary group-[.is-user]:to-[#0b63f3] group-[.is-user]:text-primary-foreground",
+      // Base container
+      "relative flex flex-col gap-2 rounded-2xl px-4 py-3 text-sm transition-all duration-300",
+
+      // Dark glass layer
+      "bg-[rgba(129,129,129,0.4)] backdrop-blur-[12px] border border-white/10",
+
+      // Highlight edge for depth layering
+      "before:absolute before:inset-0 before:rounded-2xl before:border before:border-white/[0.03] before:pointer-events-none",
+
+      // User-specific gradient style (adds a faint glow)
+      "group-[.is-user]:shadow-[0_8px_30px_rgba(0,0,0,0.5)] group-[.is-user]:bg-[rgba(56,56,56,0.4)]",
+
+      // Text color control
+      "text-gray-200 group-[.is-user]:text-white",
+
+      // Subtle scale + hover depth for interactivity
+      // "hover:scale-[1.01] hover:shadow-[0_8px_30px_rgba(0,0,0,0.5)]",
+
       className
     )}
     {...props}
   >
-    <div className="is-user:dark">{children}</div>
+    <div className="relative z-10">{children}</div>
+
+    {/* Optional internal glow layer for depth */}
+
   </div>
 );
+
 
 export type AIMessageAvatarProps = ComponentProps<typeof Avatar> & {
   src: string;

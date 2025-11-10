@@ -76,7 +76,7 @@ const Files = () => {
           file={selectedFile}
           onOpenChange={setDeleteDialog}
         />
-        <div className="flex flex-col w-full p-8 bg-muted min-h-screen">
+        <div className="flex flex-col w-full p-8 bg-card min-h-screen">
           <div className="mx-auto w-full max-w-screen-md">
             <div className="sapce-y-2">
               <h1 className="text-2xl md:text-4xl">Knowledge Base</h1>
@@ -85,7 +85,7 @@ const Files = () => {
                 upload and manage documents for your ai assistant
               </p>
             </div>
-            <div className="mt-8 rounded-lg border bg-background">
+            <div className="mt-8 rounded-lg border !bg-card glass-light">
               <div className="flex items-center justify-end border-b px-6 py-4">
                 <Button onClick={() => setUploadDialogOpen(true)}>
                   <PlusIcon />
@@ -133,7 +133,7 @@ const Files = () => {
                     return files.results.map((file) => (
                       <TableRow className="hover:bg-muted/50" key={file.id}>
                         <TableCell className="px-6 py-4 font-medium">
-                          <Badge className="flex items-center gap-3">
+                          <Badge className="flex items-center gap-3 glass-light text-white">
                             <FileIcon />
                             {file.name}
                           </Badge>

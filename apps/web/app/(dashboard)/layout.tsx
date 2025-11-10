@@ -10,7 +10,7 @@ const layout = async ({ children }: { children: React.ReactNode }) => {
   const cookieStore = await cookies();
   const defaultOpen = cookieStore.get("sidebar_state")?.value === "true";
   return (
-    <div className="w-full h-full min-w-screen min-h-screen">
+    <div className="w-full h-full min-w-screen min-h-screen ">
       <AuthGuard>
         <OrgGuard>
           <Provider>

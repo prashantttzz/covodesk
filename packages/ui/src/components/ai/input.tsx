@@ -78,7 +78,7 @@ export type AIInputProps = HTMLAttributes<HTMLFormElement>;
 export const AIInput = ({ className, ...props }: AIInputProps) => (
   <form
     className={cn(
-      "w-full divide-y overflow-hidden rounded-md border bg-background",
+      "w-full divide-y overflow-hidden glass-light !bg-card rounded-2xl",
       className
     )}
     {...props}
@@ -123,7 +123,7 @@ export const AIInputTextarea = ({
         className
       )}
       name="message"
-      onChange={(e:any) => {
+      onChange={(e: any) => {
         adjustHeight();
         onChange?.(e);
       }}
@@ -211,7 +211,7 @@ export const AIInputSubmit = ({
 
   return (
     <Button
-      className={cn("gap-1.5 rounded-md rounded-br-lg", className)}
+      className={cn("gap-1.5 glass-medium !text-white ", className)}
       size={size}
       type="submit"
       variant={variant}

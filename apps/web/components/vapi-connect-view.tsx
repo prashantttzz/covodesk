@@ -25,7 +25,7 @@ const VapiConnectView = ({ onDisconnect }: VapiConnectViewProps) => {
   const [activeTab, setActiveTab] = useState("phone-numbers");
   return (
     <div className="space-y-6">
-      <Card>
+      <Card className="glass-light !bg-card">
         <CardHeader>
           <div className="flex items-center  justify-between">
             <div className="flex items-center gap-4">
@@ -43,19 +43,24 @@ const VapiConnectView = ({ onDisconnect }: VapiConnectViewProps) => {
                 </CardDescription>
               </div>
             </div>
-            <Button variant="destructive" onClick={onDisconnect} size="sm">
+            <Button
+              variant="destructive"
+              className="bg-red-500"
+              onClick={onDisconnect}
+              size="sm"
+            >
               <UnplugIcon />
               Disconnect
             </Button>
           </div>
         </CardHeader>
       </Card>
-      <Card>
+      <Card className="glass-light !bg-card">
         <CardHeader>
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-4">
               <div className="flex size-12 items-center justify-center rounded-lg border bg-muted">
-                <SettingsIcon className="size-6 text-muted-foreground" />
+                <SettingsIcon className="size-6  glass-light text-white" />
               </div>
               <div>
                 <CardTitle>Widget Configuration</CardTitle>
@@ -75,7 +80,7 @@ const VapiConnectView = ({ onDisconnect }: VapiConnectViewProps) => {
       </Card>
       <div className="overflow-hidden rounded-lg border bg-background">
         <Tabs
-          className="gap-0"
+          className="gap-0 glass-light !bg-card"
           defaultValue="phone-numbers"
           onValueChange={setActiveTab}
           value={activeTab}
@@ -90,10 +95,10 @@ const VapiConnectView = ({ onDisconnect }: VapiConnectViewProps) => {
               Ai Assistants
             </TabsTrigger>
           </TabsList>
-          <TabsContent value="phone-numbers">
-            <VapiPhoneTab />  
+          <TabsContent value="phone-numbers" className="glass-light !bg-card">
+            <VapiPhoneTab />
           </TabsContent>
-          <TabsContent value="assistants">
+          <TabsContent className="glass-light !bg-card" value="assistants">
             <VapiAssistantTab />
           </TabsContent>
         </Tabs>

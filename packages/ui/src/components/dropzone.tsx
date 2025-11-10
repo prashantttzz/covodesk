@@ -83,7 +83,7 @@ export const Dropzone = ({
     >
       <Button
         className={cn(
-          "relative h-auto w-full flex-col overflow-hidden p-8",
+          "relative h-auto w-full flex-col bg-card overflow-hidden p-8",
           isDragActive && "outline-none ring-1 ring-ring",
           className
         )}
@@ -131,8 +131,8 @@ export const DropzoneContent = ({
   }
 
   return (
-    <div className={cn("flex flex-col items-center justify-center", className)}>
-      <div className="flex size-8 items-center justify-center rounded-md bg-muted text-muted-foreground">
+    <div className={cn("flex flex-col bg-card items-center justify-center", className)}>
+      <div className="flex size-8 items-center justify-center rounded-md bg-card text-muted-foreground">
         <UploadIcon size={16} />
       </div>
       <p className="my-2 w-full truncate font-medium text-sm">
@@ -184,8 +184,8 @@ export const DropzoneEmptyState = ({
   }
 
   return (
-    <div className={cn("flex flex-col items-center justify-center", className)}>
-      <div className="flex size-8 items-center justify-center rounded-md bg-muted text-muted-foreground">
+    <div className={cn("flex flex-col items-center bg-card justify-center", className)}>
+      <div className="flex size-8 items-center justify-center rounded-md bg-card   text-muted-foreground">
         <UploadIcon size={16} />
       </div>
       <p className="my-2 w-full truncate text-wrap font-medium text-sm">

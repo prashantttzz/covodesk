@@ -34,6 +34,8 @@ import InfiniteScrollTrigger from "@workspace/ui/components/InfiniteScrollTrigge
 import { cn } from "@workspace/ui/lib/utils";
 import { Skeleton } from "@workspace/ui/components/skeleton";
 import { toast } from "sonner";
+import ContactDialog from "./contact-panel";
+
 const formSchema = z.object({
   message: z.string().min(2, "message is required"),
 });
@@ -47,13 +49,16 @@ const Conversation = ({
   const conversation = useQuery(api.private.conversation.getOne, {
     conversationId,
   });
+
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
       message: "",
     },
   });
+
   const createMessages = useMutation(api.private.messages.messages);
+
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
     try {
       await createMessages({
@@ -62,12 +67,14 @@ const Conversation = ({
       });
       form.reset();
     } catch (error) {
-      toast.error("someting went wrong");
+      toast.error("Something went wrong");
       console.error(error);
     }
   };
+
   const [isEnhancing, setIsEnhancing] = useState(false);
   const enhanceResponse = useAction(api.private.messages.enhanceResponse);
+
   const handleEnhanceResponse = async () => {
     const currentValue = form.getValues("message");
     try {
@@ -80,6 +87,7 @@ const Conversation = ({
       setIsEnhancing(false);
     }
   };
+
   const messages = useThreadMessages(
     api.private.messages.getMany,
     conversation?.threadId ? { threadId: conversation?.threadId } : "skip",
@@ -93,22 +101,20 @@ const Conversation = ({
       loadSize: 10,
       observerEnabled: true,
     });
+
   const updateConversationStatus = useMutation(
     api.private.conversation.updateStatus
   );
-  const handlestatusToggle = async () => {
+
+  const handleStatusToggle = async () => {
     isUpdating(true);
-    if (!conversation) {
-      return null;
-    }
+    if (!conversation) return null;
+
     let newStatus: "resolved" | "unresolved" | "escalated";
-    if (conversation.status === "unresolved") {
-      newStatus = "escalated";
-    } else if (conversation.status === "escalated") {
-      newStatus = "resolved";
-    } else {
-      newStatus = "unresolved";
-    }
+    if (conversation.status === "unresolved") newStatus = "escalated";
+    else if (conversation.status === "escalated") newStatus = "resolved";
+    else newStatus = "unresolved";
+
     try {
       await updateConversationStatus({ conversationId, status: newStatus });
     } catch (error) {
@@ -117,50 +123,58 @@ const Conversation = ({
       isUpdating(false);
     }
   };
+
+  
   if (conversation === undefined || messages.status === "LoadingFirstPage") {
     return <ConversationIdLoading />;
   }
+
   return (
-    <div className="flex flex-col h-full bg-muted">
-      <header className="flex items-center  justify-between  border-b bg-background p-2.5">
-        <Button variant="ghost" size="sm">
-          <MoreHorizontalIcon />
-        </Button>
+    <div className="flex flex-col h-screen bg-card">
+      {/* Header */}
+      <header className="flex items-center justify-between border-b bg-card p-2.5">
+      <ContactDialog/>
         {!!conversation && (
           <ConversationStatusButton
             disabled={updating}
-            onClick={handlestatusToggle}
+            onClick={handleStatusToggle}
             status={conversation.status}
           />
         )}
       </header>
-      <AIConversation className="min-h-[calc(100vh-180px)]">
-        <AIConversationContent>
-          <InfiniteScrollTrigger
-            canLoadMore={canLoadMore}
-            isLoadingMore={isLoadingMore}
-            onLoadMore={handleLoadMore}
-            ref={topElementRef}
-          />
-          {toUIMessages(messages.results ?? [])?.map((message) => (
-            <AIMessage
-              from={message.role === "user" ? "assistant" : "user"}
-              key={message.id}
-            >
-              <AIMessageContent>
-                <AIResponse>{message.content}</AIResponse>
-              </AIMessageContent>
-              {message.role === "user" && (
-                <Dicebear
-                  seed={conversation?.contactSessionId ?? ""}
-                  size={32}
-                />
-              )}
-            </AIMessage>
-          ))}
-        </AIConversationContent>
-      </AIConversation>
-      <div className="p-2">
+
+      {/* Scrollable Chat Section */}
+      <div className="flex-1 overflow-y-auto">
+        <AIConversation className="min-h-full">
+          <AIConversationContent>
+            <InfiniteScrollTrigger
+              canLoadMore={canLoadMore}
+              isLoadingMore={isLoadingMore}
+              onLoadMore={handleLoadMore}
+              ref={topElementRef}
+            />
+            {toUIMessages(messages.results ?? [])?.map((message) => (
+              <AIMessage
+                from={message.role === "user" ? "assistant" : "user"}
+                key={message.id}
+              >
+                <AIMessageContent>
+                  <AIResponse>{message.content}</AIResponse>
+                </AIMessageContent>
+                {message.role === "user" && (
+                  <Dicebear
+                    seed={conversation?.contactSessionId ?? ""}
+                    size={32}
+                  />
+                )}
+              </AIMessage>
+            ))}
+          </AIConversationContent>
+        </AIConversation>
+      </div>
+
+      {/* Fixed Input Section */}
+      <div className="sticky bottom-0  bg-transparent p-2">
         <Form {...form}>
           <AIInput onSubmit={form.handleSubmit(onSubmit)}>
             <FormField
@@ -182,21 +196,21 @@ const Conversation = ({
                   }}
                   placeholder={
                     conversation?.status === "resolved"
-                      ? "this conversation has been resolved"
-                      : "type your response as an operator..."
+                      ? "This conversation has been resolved"
+                      : "Type your response as an operator..."
                   }
                   value={field.value}
-                ></AIInputTextarea>
+                />
               )}
             />
-            <AIInputToolbar>
+            <AIInputToolbar className="bg-card">
               <AIInputTools>
                 <AIInputButton
                   disabled={conversation?.status === "resolved" || isEnhancing}
                   onClick={handleEnhanceResponse}
                 >
                   <Wand2Icon />
-                  {isEnhancing ? "enhancing..." : "Enhance"}
+                  {isEnhancing ? "Enhancing..." : "Enhance"}
                 </AIInputButton>
               </AIInputTools>
               <AIInputSubmit
@@ -220,8 +234,8 @@ export default Conversation;
 
 export const ConversationIdLoading = () => {
   return (
-    <div className="flex h-full flex-col bg-muted">
-      <header className="flex items-center justify-between border-b  bg-background p-2.5">
+    <div className="flex h-screen flex-col bg-card">
+      <header className="flex items-center justify-between border-b  bg-card p-2.5">
         <Button variant="ghost" disabled size="sm">
           <MoreHorizontalIcon />
         </Button>
@@ -241,9 +255,9 @@ export const ConversationIdLoading = () => {
                 key={index}
               >
                 <Skeleton
-                  className={`h-full ${width} rounded-lg bg-neutral-200`}
+                  className={`h-full ${width} rounded-lg bg-neutral-700`}
                 />
-                <Skeleton className={`size-8  rounded-full bg-neutral-200`} />
+                <Skeleton className={`size-8  rounded-full bg-neutral-800`} />
               </div>
             );
           })}
@@ -252,7 +266,8 @@ export const ConversationIdLoading = () => {
       <div className="p-2">
         <AIInput>
           <AIInputTextarea
-            disabled
+            
+            className="bg-card"
             placeholder=" type your response as an operator"
           />
         </AIInput>

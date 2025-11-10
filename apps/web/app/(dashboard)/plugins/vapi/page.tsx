@@ -92,7 +92,7 @@ const VapiPluginForm = ({
 
   return (
     <Dialog onOpenChange={setOpen} open={open}>
-      <DialogContent>
+      <DialogContent className="glass-light !bg-card">
         <DialogHeader>Enable Vapi</DialogHeader>
         <DialogDescription>
           your api keys are safely encrypted and stored using aws secret
@@ -167,13 +167,13 @@ const VapiPluginRemoveForm = ({
   };
   return (
     <Dialog onOpenChange={setOpen} open={open}>
-      <DialogContent>
+      <DialogContent className="glass-light !bg-card">
         <DialogHeader>disconnect Vapi</DialogHeader>
         <DialogDescription>
           are you sure you want to disconnect vapi plugin?{" "}
         </DialogDescription>
       <DialogFooter>
-        <Button onClick={onSubmit} variant="destructive">
+        <Button onClick={onSubmit} variant="destructive" className="bg-red-500">
           Disconnect
         </Button>
       </DialogFooter>
@@ -197,7 +197,7 @@ const VapiPlugin = () => {
     <>
       <VapiPluginForm setOpen={setConnect} open={connect} />
       <VapiPluginRemoveForm setOpen={setRemove} open={remove} />
-      <div className="flex min-h-screen flex-col w-full bg-muted p-8">
+      <div className="flex min-h-screen flex-col w-full bg-card p-8">
         <div className="mx-auto w-full max-w-screen-md">
           <div className="space-y-2">
             <h1 className="text-2xl md:text-4xl">Vapi Plugin</h1>

@@ -27,7 +27,7 @@ const VapiPhoneTab = () => {
     }
   };
   return (
-    <div className="border-t bg-background">
+    <div className="border-t  !bg-card">
       <Table>
         <TableHeader>
           <TableRow>

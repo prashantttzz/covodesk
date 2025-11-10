@@ -93,7 +93,7 @@ const CustomizationForm = ({
   return (
     <Form {...form}>
       <form className="space-y-6" onSubmit={form.handleSubmit(onSubmit)}>
-        <Card>
+        <Card className="glass-light !bg-card">
           <CardHeader>
             <CardTitle>General Chat Setting</CardTitle>
             <CardDescription>
@@ -183,7 +183,7 @@ const CustomizationForm = ({
           </CardContent>
         </Card>
         {hasVapiPlugin && (
-          <Card>
+        <Card className="glass-light !bg-card">
             <CardHeader>
               <CardTitle>Voice Assistant Settings</CardTitle>
               <CardDescription>

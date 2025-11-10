@@ -23,7 +23,7 @@ const PluginCard = ({
   feature,
 }: PluginCardProps) => {
   return (
-    <div className="h-fit w-full roundedlg bg-background p-8 border">
+    <div className="h-fit w-full rounded-lg glass-light !bg-card p-8 border">
       <div className="mb-6 flex items-center justify-center gap-6">
         <div className="flex flex-col items-center">
           <Image

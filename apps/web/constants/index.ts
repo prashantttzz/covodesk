@@ -39,7 +39,7 @@ export const sidebarConfigurationItems = [
 export const sidebarAccountItems = [
   {
     title: "Plan and Billing",
-    url: "billing",
+    url: "/billing",
     icon: CreditCardIcon,
   },
 ];

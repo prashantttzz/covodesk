@@ -42,7 +42,7 @@ const DeleteDialog = ({
   };
   return (
     <Dialog onOpenChange={onOpenChange} open={open}>
-      <DialogContent className="sm:max-w-md">
+      <DialogContent className="sm:max-w-md glass-dialog">
         <DialogHeader>
           <DialogTitle>Delete file</DialogTitle>
           <DialogDescription>
@@ -65,6 +65,7 @@ const DeleteDialog = ({
             disabled={isDeleting}
             onClick={() => onOpenChange(false)}
             variant="outline"
+            className="glass-light"
           >
             Cancel
           </Button>
@@ -72,6 +73,7 @@ const DeleteDialog = ({
             disabled={isDeleting || !file}
             onClick={handleDelete}
             variant="destructive"
+            className="bg-red-500"
           >
             {isDeleting ? "deletingg..." : "delete    "}
           </Button>

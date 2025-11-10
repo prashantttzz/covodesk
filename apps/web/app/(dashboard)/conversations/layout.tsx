@@ -7,12 +7,12 @@ import {
 import { ConversationPanel } from "@/components/conversation-panel";
 const layout = ({ children }: { children: React.ReactNode }) => {
   return (
-    <ResizablePanelGroup className="h-full flex-1" direction="horizontal">
+    <ResizablePanelGroup className="h-full flex-1 bg-card" direction="horizontal">
       <ResizablePanel
         defaultSize={30}
         maxSize={30}
         minSize={20}
-        className="h-screen"
+        className="h-screen "
       >
         <ConversationPanel />{" "}
       </ResizablePanel>
