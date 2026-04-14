@@ -46,7 +46,7 @@ export const search = createTool({
           content: `user asked: ${args.query} \n\n search results : ${contextText}`,
         },
       ],
-      model: google("gemini-1.5-flash"),
+      model: google("gemini-2.5-flash"),
     });
 
     await supportAgent.saveMessage(ctx, {
