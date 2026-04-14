@@ -1,5 +1,5 @@
 import { createClerkClient } from "@clerk/backend";
-import { action } from "../_generated/server";
+import { action } from "../_generated/server.js";
 import { v } from "convex/values";
 
 const clerkClient = createClerkClient({

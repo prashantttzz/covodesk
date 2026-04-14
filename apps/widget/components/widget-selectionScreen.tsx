@@ -29,7 +29,7 @@ const WidgetSelectionScreen = () => {
 
   const createConversation = useMutation(api.public.conversations.create);
   
-  const handleConversations = async () => {
+  const handleConversations = async (target: "chat" | "voice") => {
     if (!organizationId) {
       setScreen("error");
       setErrorMessage("missing organization id");
@@ -46,7 +46,7 @@ const WidgetSelectionScreen = () => {
         contactSessionId,
       });
       setConversationId(conversationId)
-      setScreen("chat");
+      setScreen(target);
     } catch (error) {
       setScreen("auth");
     }finally{
@@ -65,7 +65,7 @@ const WidgetSelectionScreen = () => {
         <Button
           variant="outline"
           className="h-16 w-full glass-light !bg-card justify-between"
-          onClick={handleConversations}
+          onClick={() => handleConversations("chat")}
           disabled={isPending}
         >
           <div className="flex items-center  gap-x-2">
@@ -78,7 +78,7 @@ const WidgetSelectionScreen = () => {
           <Button
           variant="outline"
           className="h-16 w-full justify-between !bg-card glass-light"
-          onClick={()=>setScreen("voice")}
+          onClick={() => handleConversations("voice")}
           disabled={isPending}
         >
           <div className="flex items-center  gap-x-2">
@@ -88,6 +88,7 @@ const WidgetSelectionScreen = () => {
           <ChevronRightIcon />
         </Button>
       )}
+
       {hasVapiSecrets && widgetSettings?.vapiSettings.phoneNumber && (
           <Button
           variant="outline"

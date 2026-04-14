@@ -1,5 +1,5 @@
 import { ConvexError, v } from "convex/values";
-import { action, mutation, query, QueryCtx } from "../_generated/server";
+import { action, mutation, query, QueryCtx } from "../_generated/server.js";
 import {
   contentHashFromArrayBuffer,
   Entry,
@@ -8,9 +8,9 @@ import {
   guessMimeTypeFromExtension,
   vEntryId,
 } from "@convex-dev/rag";
-import { rag } from "../system/ai/rag";
-import { ExtractTextContent } from "../lib/extractTextContent";
-import { Id } from "../_generated/dataModel";
+import { rag } from "../system/ai/rag.js";
+import { ExtractTextContent } from "../lib/extractTextContent.js";
+import { Id } from "../_generated/dataModel.js";
 import { paginationOptsValidator } from "convex/server";
 
 export type PublicFile = {

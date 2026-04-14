@@ -1,7 +1,7 @@
 import { v } from "convex/values";
-import { internalAction } from "../_generated/server";
-import { upsertSecret } from "../lib/secret";
-import { internal } from "../_generated/api";
+import { internalAction } from "../_generated/server.js";
+import { upsertSecret } from "../lib/secret.js";
+import { internal } from "../_generated/api.js";
 
 export const upsert = internalAction({
   args: {

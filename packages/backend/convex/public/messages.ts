@@ -1,12 +1,11 @@
 import { ConvexError, v } from "convex/values";
-import { action, query } from "../_generated/server";
-import { components, internal } from "../_generated/api";
-import { supportAgent } from "../system/ai/SupportAgent";
+import { action, query } from "../_generated/server.js";
+import { internal } from "../_generated/api.js";
+import { supportAgent } from "../system/ai/SupportAgent.js";
 import { paginationOptsValidator } from "convex/server";
-import { resolveConversation } from "../system/tools/resolveConversation";
-import { escalateConversation } from "../system/tools/escalateConversation";
-import { saveMessage } from "@convex-dev/agent";
-import { search } from "../system/tools/searchTool";
+import { resolveConversation } from "../system/tools/resolveConversation.js";
+import { escalateConversation } from "../system/tools/escalateConversation.js";
+import { search } from "../system/tools/searchTool.js";
 
 export const messages = action({
   args: {
@@ -52,6 +51,7 @@ export const messages = action({
     );
     const shouldTriggeragent =
       conversation.status === "unresolved" && subscription?.status === "active";
+
     if (shouldTriggeragent) {
       await supportAgent.generateText(
         ctx,
@@ -66,13 +66,14 @@ export const messages = action({
         }
       );
     } else {
-      await saveMessage(ctx, components.agent, {
+      await supportAgent.saveMessage(ctx, {
         threadId: args.threadId,
-        prompt: args.prompt,
+        message: { role: "user", content: args.prompt },
       });
     }
   },
 });
+
 
 export const getMany = query({
   args: {

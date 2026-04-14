@@ -156,11 +156,12 @@ const Conversation = ({
             {toUIMessages(messages.results ?? [])?.map((message) => (
               <AIMessage
                 from={message.role === "user" ? "assistant" : "user"}
-                key={message.id}
+                key={message.key}
               >
                 <AIMessageContent>
-                  <AIResponse>{message.content}</AIResponse>
+                  <AIResponse>{message.text}</AIResponse>
                 </AIMessageContent>
+
                 {message.role === "user" && (
                   <Dicebear
                     seed={conversation?.contactSessionId ?? ""}

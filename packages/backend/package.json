@@ -13,22 +13,22 @@
     }
   },
   "devDependencies": {
-    "@types/node": "^20",
+    "@types/node": "^25.6.0",
     "@workspace/typescript-config": "workspace:*",
-    "typescript": "latest"
+    "typescript": "^6.0.2"
   },
   "dependencies": {
-    "@ai-sdk/google": "1.2.22",
-    "@aws-sdk/client-secrets-manager": "^3.908.0",
-    "@clerk/backend": "^2.7.1",
-    "@convex-dev/agent": "^0.1.17",
-    "@convex-dev/rag": "0.3.3",
-    "@hookform/resolvers": "3.3.4",
-    "@vapi-ai/server-sdk": "^0.10.2",
-    "ai": "4.3.19",
-    "convex": "^1.25.4",
-    "convex-helpers": "^0.1.102",
-    "svix": "^1.81.0",
-    "zod": "3.25.67"
+    "@ai-sdk/google": "3.0.63",
+    "@aws-sdk/client-secrets-manager": "^3.1030.0",
+    "@clerk/backend": "^3.2.9",
+    "@convex-dev/agent": "^0.6.1",
+    "@convex-dev/rag": "0.7.2",
+    "@hookform/resolvers": "5.2.2",
+    "@vapi-ai/server-sdk": "^1.1.0",
+    "ai": "6.0.159",
+    "convex": "^1.35.1",
+    "convex-helpers": "^0.1.114",
+    "svix": "^1.90.0",
+    "zod": "4.3.6"
   }
 }

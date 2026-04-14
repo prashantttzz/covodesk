@@ -1,6 +1,6 @@
 import { v } from "convex/values";
-import { internal } from "../_generated/api";
-import { internalMutation, internalQuery } from "../_generated/server";
+import { internal } from "../_generated/api.js";
+import { internalMutation, internalQuery } from "../_generated/server.js";
 
 export const upsert = internalMutation({
   args: {

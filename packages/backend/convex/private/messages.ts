@@ -1,12 +1,12 @@
 import { ConvexError, v } from "convex/values";
-import { action, mutation, query } from "../_generated/server";
-import { supportAgent } from "../system/ai/SupportAgent";
+import { action, mutation, query } from "../_generated/server.js";
+import { supportAgent } from "../system/ai/SupportAgent.js";
 import { paginationOptsValidator } from "convex/server";
 import { saveMessage } from "@convex-dev/agent";
-import { components, internal } from "../_generated/api";
+import { components, internal } from "../_generated/api.js";
 import { generateText } from "ai";
 import { google } from "@ai-sdk/google";
-import { OPERATOR_MESSAGE_ENHANCEMENT_PROMPT } from "../lib/constant";
+import { OPERATOR_MESSAGE_ENHANCEMENT_PROMPT } from "../lib/constant.js";
 
 export const getMany = query({
   args: {

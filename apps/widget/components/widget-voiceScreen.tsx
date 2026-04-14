@@ -1,12 +1,19 @@
 "use client";
-import { useSetAtom } from "jotai";
-import React from "react";
-import { screenAtom } from "./widget-atom";
+import {
+
+  contactSessionIdFamily,
+  conversationIdAtom,
+  organizationIdAtom,
+  screenAtom,
+} from "./widget-atom";
 import { useVapi } from "@/hooks/use-vapi";
 import { WidgetHeader } from "./widget-header";
 import { Button } from "@workspace/ui/components/button";
 import { ArrowLeftIcon, Loader, MicIcon, MicOffIcon } from "lucide-react";
 import { cn } from "@workspace/ui/lib/utils";
+import { useAction, useQuery } from "convex/react";
+import { api } from "@workspace/backend/_generated/api";
+import { useAtomValue, useSetAtom } from "jotai";
 import {
   AIConversation,
   AIConversationContent,
@@ -19,8 +26,45 @@ import {
 
 const WidgetVoiceScreen = () => {
   const setScreen = useSetAtom(screenAtom);
-  const { transcript, isSpeaking, connected, startCall, endCall, connecting } =
-    useVapi();
+  const conversationId = useAtomValue(conversationIdAtom);
+  const organizationId = useAtomValue(organizationIdAtom);
+  const contactSessionId = useAtomValue(
+    contactSessionIdFamily(organizationId || "")
+  );
+
+  const conversation = useQuery(
+    api.public.conversations.getOne,
+    conversationId && contactSessionId
+      ? {
+          contactSessionId,
+          conversationId,
+        }
+      : "skip"
+  );
+
+  const createMessage = useAction(api.public.messages.messages);
+
+  const {
+    transcript,
+    isSpeaking,
+    connected,
+    startCall,
+    endCall,
+    connecting,
+    partialTranscript,
+  } = useVapi((message) => {
+    if (conversation?.threadId && contactSessionId) {
+      // We don't await this as we want the UI to remain responsive
+      createMessage({
+        threadId: conversation.threadId,
+        prompt: message.text,
+        contactSessionId,
+      }).catch((err) => {
+        console.error("Failed to sync voice message to Convex:", err);
+      });
+    }
+  });
+
   return (
     <>
       <WidgetHeader>
@@ -37,7 +81,7 @@ const WidgetVoiceScreen = () => {
           <p>Voice Chat</p>
         </div>
       </WidgetHeader>
-      {transcript.length > 0 ? (
+      {transcript.length > 0 || partialTranscript ? (
         <AIConversation className="h-full flex-1">
           <AIConversationContent>
             {transcript.map((message, index) => (
@@ -48,9 +92,17 @@ const WidgetVoiceScreen = () => {
                 <AIMessageContent>{message.text}</AIMessageContent>
               </AIMessage>
             ))}
+            {partialTranscript && (
+              <AIMessage from={partialTranscript.role} key="partial">
+                <AIMessageContent className="opacity-70 italic">
+                  {partialTranscript.text}
+                </AIMessageContent>
+              </AIMessage>
+            )}
           </AIConversationContent>
           <AIConversationScrollButton />
         </AIConversation>
+
       ) : (
         <div className="flex flex-col items-center justify-center h-full flex-1 gap-y-4">
           <div className="flex items-center justify-center rounded-full border bg-white p-3">

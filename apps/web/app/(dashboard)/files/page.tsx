@@ -28,10 +28,12 @@ import { usePaginatedQuery } from "convex/react";
 import UploadDialog from "../../../components/upload-dialog";
 import InfiniteScrollTrigger from "@workspace/ui/components/InfiniteScrollTrigger";
 import DeleteDialog from "@/components/delete-dialog";
-import { Protect } from "@clerk/nextjs";
 import { PublicFile } from "@workspace/backend/private/files";
 import PremiumFeatureOverlay from "@/components/premium-feature-overlay";
+import { useAuth } from "@clerk/nextjs";
 const Files = () => {
+     const { has } = useAuth();
+
   const files = usePaginatedQuery(
     api.private.files.listFiles,
     {},
@@ -60,11 +62,11 @@ const Files = () => {
   const handlefileDelete = () => {
     setSelectedFile(null);
   };
+  const isPro = has?.({ plan: "pro" });
+  if (!isPro) {
+    return <PremiumFeatureOverlay>k</PremiumFeatureOverlay>;
+  }
   return (
-    <Protect
-      condition={(has) => has({ plan: "pro" })}
-      fallback={<PremiumFeatureOverlay>k</PremiumFeatureOverlay>}
-    >
       <>
         <UploadDialog
           open={uploadDialogOpen}
@@ -187,7 +189,6 @@ const Files = () => {
           </div>
         </div>
       </>
-    </Protect>
   );
 };
 

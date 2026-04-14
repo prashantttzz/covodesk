@@ -73,6 +73,7 @@ const WidgetChatScreen = () => {
       initialNumItems: 5,
     }
   );
+  console.log("messae",messages)
   const { topElementRef, handleLoadMore, canLoadMore, isLoadingMore } =
     useInfinteScroll({
       status: messages.status,
@@ -141,7 +142,7 @@ const WidgetChatScreen = () => {
                 key={mes.id}
               >
                 <AIMessageContent>
-                  <AIResponse>{mes.content}</AIResponse>
+                  <AIResponse>{mes.text}</AIResponse>
                 </AIMessageContent>
                 {mes.role === "assistant" && (
                   <Dicebear seed="assistant" size={32} imageUrl="/logo.svg" />

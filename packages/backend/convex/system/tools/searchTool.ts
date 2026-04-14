@@ -3,18 +3,18 @@ import z from "zod";
 
 import { generateText } from "ai";
 import { google } from "@ai-sdk/google";
-import { internal } from "../../_generated/api";
-import { rag } from "../ai/rag";
-import { supportAgent } from "../ai/SupportAgent";
-import { SEARCH_INTERPRETER_PROMPT } from "../../lib/constant";
+import { internal } from "../../_generated/api.js";
+import { rag } from "../ai/rag.js";
+import { supportAgent } from "../ai/SupportAgent.js";
+import { SEARCH_INTERPRETER_PROMPT } from "../../lib/constant.js";
 
 export const search = createTool({
   description:
     "search the knowledge base for relevant information to help answer user questions",
-  args: z.object({
+  inputSchema: z.object({
     query: z.string().describe("the search query to find relevant information"),
   }),
-  handler: async (ctx, args) => {
+  execute: async (ctx, args) => {
     if (!ctx.threadId) {
       return "missing thread id";
     }
@@ -32,20 +32,21 @@ export const search = createTool({
       limit: 5,
     });
     const contextText = `found result in ${searchResult.entries
-      .map((e) => e.title || null)
-      .filter((t) => t !== null)
+      .map((e: any) => e.title || null)
+      .filter((t: any) => t !== null)
       .join(", ")}. here is the context \n\n${searchResult.text}`;
     const response = await generateText({
       messages: [
         {
           role: "system",
-          content:SEARCH_INTERPRETER_PROMPT        },
+          content: SEARCH_INTERPRETER_PROMPT,
+        },
         {
           role: "user",
           content: `user asked: ${args.query} \n\n search results : ${contextText}`,
         },
       ],
-      model: google("gemini-2.5-flash"),
+      model: google("gemini-1.5-flash"),
     });
 
     await supportAgent.saveMessage(ctx, {
@@ -55,3 +56,4 @@ export const search = createTool({
     return response.text;
   },
 });
+

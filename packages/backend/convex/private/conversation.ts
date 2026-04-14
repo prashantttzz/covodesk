@@ -1,9 +1,9 @@
 import { paginationOptsValidator, PaginationResult } from "convex/server";
-import { mutation, query } from "../_generated/server";
+import { mutation, query } from "../_generated/server.js";
 import { ConvexError, v } from "convex/values";
-import { Doc } from "../_generated/dataModel";
+import { Doc } from "../_generated/dataModel.js";
 import { MessageDoc } from "@convex-dev/agent";
-import { supportAgent } from "../system/ai/SupportAgent";
+import { supportAgent } from "../system/ai/SupportAgent.js";
 
 export const getMany = query({
   args: {

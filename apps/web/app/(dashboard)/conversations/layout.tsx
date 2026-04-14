@@ -1,26 +1,16 @@
 import React from "react";
-import {
-  ResizablePanelGroup,
-  ResizableHandle,
-  ResizablePanel,
-} from "@workspace/ui/components/resizable";
 import { ConversationPanel } from "@/components/conversation-panel";
+
 const layout = ({ children }: { children: React.ReactNode }) => {
   return (
-    <ResizablePanelGroup className="h-full flex-1 bg-card" direction="horizontal">
-      <ResizablePanel
-        defaultSize={30}
-        maxSize={30}
-        minSize={20}
-        className="h-screen "
-      >
-        <ConversationPanel />{" "}
-      </ResizablePanel>
-      <ResizableHandle />
-      <ResizablePanel className="h-full" defaultSize={70}>
+    <div className="flex h-screen w-full bg-card overflow-hidden">
+      <div className="w-[400px] h-full border-r shrink-0">
+        <ConversationPanel />
+      </div>
+      <main className="flex-1 h-full min-w-0 overflow-auto">
         {children}
-      </ResizablePanel>
-    </ResizablePanelGroup>
+      </main>
+    </div>
   );
 };
 

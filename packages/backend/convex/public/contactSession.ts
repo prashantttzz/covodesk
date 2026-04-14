@@ -1,5 +1,5 @@
 import { v } from "convex/values";
-import { mutation } from "../_generated/server";
+import { mutation } from "../_generated/server.js";
 
 const SESSION_DURATION = 24 * 60 * 60 * 1000; // 24 hours
 export const create = mutation({

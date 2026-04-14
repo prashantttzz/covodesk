@@ -2,8 +2,8 @@ import { httpRouter } from "convex/server";
 import { Webhook } from "svix";
 import { createClerkClient } from "@clerk/backend";
 import type { WebhookEvent } from "@clerk/backend";
-import { httpAction } from "./_generated/server";
-import { internal } from "./_generated/api";
+import { httpAction } from "./_generated/server.js";
+import { internal } from "./_generated/api.js";
 
 const clerkClient = createClerkClient({
   secretKey: process.env.CLERK_SECRET_KEY,

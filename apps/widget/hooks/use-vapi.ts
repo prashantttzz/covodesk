@@ -8,13 +8,17 @@ interface TranscriptMessage {
   text: string;
 }
 
-export const useVapi = () => {
+export const useVapi = (
+  onMessage?: (message: TranscriptMessage) => void
+) => {
+
   const vapiSecrets = useAtomValue(vapiSecretsAtom);
   const widgetSettings = useAtomValue(widgetSettingsAtom);
   const [vapi, setVapi] = useState<Vapi | null>(null);
   const [connected, setConnected] = useState(false);
   const [connecting, setConnecting] = useState(false);
   const [transcript, setTranscript] = useState<TranscriptMessage[]>([]);
+  const [partialTranscript, setPartialTranscript] = useState<TranscriptMessage | null>(null);
   const [isSpeaking, setIsSpeaking] = useState(false);
   useEffect(() => {
     if (!vapiSecrets) {
@@ -23,10 +27,10 @@ export const useVapi = () => {
     const vapiInstance = new Vapi(vapiSecrets.publicApiKey);
     setVapi(vapiInstance);
     vapiInstance.on("call-start", () => {
-      setConnected(true), setConnecting(true), setTranscript([]);
+      setConnected(true), setConnecting(true), setTranscript([]), setPartialTranscript(null);
     });
     vapiInstance.on("call-end", () => {
-      setConnected(false), setConnecting(false), setIsSpeaking(false);
+      setConnected(false), setConnecting(false), setIsSpeaking(false), setPartialTranscript(null);
     });
     vapiInstance.on("speech-start", () => {
       setIsSpeaking(true);
@@ -39,16 +43,25 @@ export const useVapi = () => {
       setConnecting(false);
     });
     vapiInstance.on("message", (message) => {
-      if (message.type === "transcript" && message.transcriptType === "final") {
-        setTranscript((prev) => [
-          ...prev,
-          {
+      if (message.type === "transcript") {
+        if (message.transcriptType === "final") {
+          setPartialTranscript(null);
+          const newMessage: TranscriptMessage = {
             role: message.role === "user" ? "user" : "assistant",
             text: message.transcript,
-          },
-        ]);
+          };
+          setTranscript((prev) => [...prev, newMessage]);
+          onMessage?.(newMessage);
+        } else {
+
+          setPartialTranscript({
+            role: message.role === "user" ? "user" : "assistant",
+            text: message.transcript,
+          });
+        }
       }
     });
+
     return () => {
       vapiInstance?.stop();
     };
@@ -73,7 +86,9 @@ export const useVapi = () => {
     connected,
     connecting,
     transcript,
+    partialTranscript,
     startCall,
     endCall,
   };
 };
+
