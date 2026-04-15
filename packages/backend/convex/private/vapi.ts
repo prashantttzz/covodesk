@@ -32,8 +32,8 @@ export const getAssistant = action({
       });
     }
     const secretData = {
-      publicApiKey: "308107ef-f15f-409c-9f93-5182903f5686",
-      privateApiKey: "308107ef-f15f-409c-9f93-5182903f5686", // Using public key as fallback/placeholder if private is not provided
+      publicApiKey: "49f19367-ea0f-4e74-9325-0c43dd396b62 ",
+      privateApiKey: "9717a7ec-982b-488f-9880-abaad863d40f", // Using public key as fallback/placeholder if private is not provided
     };
 
     const vapiClient = new VapiClient({ token: secretData.privateApiKey });
