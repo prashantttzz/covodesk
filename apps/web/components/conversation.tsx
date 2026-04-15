@@ -2,7 +2,7 @@
 import { Id } from "@workspace/backend/_generated/dataModel";
 import { Button } from "@workspace/ui/components/button";
 import { MoreHorizontalIcon, Wand2Icon } from "lucide-react";
-import React, { useState } from "react";
+import React, { useMemo, useState } from "react";
 import { z } from "zod";
 import { useForm } from "react-hook-form";
 import { Form, FormField } from "@workspace/ui/components/form";
@@ -93,6 +93,13 @@ const Conversation = ({
     conversation?.threadId ? { threadId: conversation?.threadId } : "skip",
     { initialNumItems: 10 }
   );
+  const visibleMessages = useMemo(
+    () =>
+      toUIMessages(messages.results ?? []).filter(
+        (message) => message.role && message.text.trim().length > 0
+      ),
+    [messages.results]
+  );
 
   const { topElementRef, canLoadMore, handleLoadMore, isLoadingMore } =
     useInfinteScroll({
@@ -153,7 +160,7 @@ const Conversation = ({
               onLoadMore={handleLoadMore}
               ref={topElementRef}
             />
-            {toUIMessages(messages.results ?? [])?.map((message) => (
+            {visibleMessages.map((message) => (
               <AIMessage
                 from={message.role === "user" ? "assistant" : "user"}
                 key={message.key}

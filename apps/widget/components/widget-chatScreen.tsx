@@ -73,7 +73,13 @@ const WidgetChatScreen = () => {
       initialNumItems: 5,
     }
   );
-  console.log("messae",messages)
+  const visibleMessages = useMemo(
+    () =>
+      toUIMessages(messages.results ?? []).filter(
+        (message) => message.role && message.text.trim().length > 0
+      ),
+    [messages.results]
+  );
   const { topElementRef, handleLoadMore, canLoadMore, isLoadingMore } =
     useInfinteScroll({
       status: messages.status,
@@ -135,7 +141,7 @@ const WidgetChatScreen = () => {
             onLoadMore={handleLoadMore}
             ref={topElementRef}
           />
-          {toUIMessages(messages.results ?? [])?.map((mes) => {
+          {visibleMessages.map((mes) => {
             return (
               <AIMessage
                 from={mes.role === "user" ? "user" : "assistant"}
@@ -152,7 +158,7 @@ const WidgetChatScreen = () => {
           })}
         </AIConversationContent>
       </AIConversation>
-      {toUIMessages(messages.results??[])?.length===1&& (
+      {visibleMessages.length === 1 && (
 
         <AISuggestions className="flex flex-col w-full items-end p-2">
         {suggestions.map((suggestion) => {
