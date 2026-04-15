@@ -18,14 +18,7 @@ import { toast } from "sonner";
 
 const VapiPhoneTab = () => {
   const { data: phoneNumber, isLoading } = useVapiPhoneNumber();
-  const copyToClipboard = async (text: string) => {
-    try {
-      await navigator.clipboard.writeText(text);
-      toast.success("copied to clipboard");
-    } catch {
-      toast.error("failed to copy");
-    }
-  };
+
   return (
     <div className="border-t  !bg-card">
       <Table>
@@ -50,7 +43,24 @@ const VapiPhoneTab = () => {
                 </TableRow>
               );
             }
-            if (phoneNumber.length === 0) {
+
+            // Handle backend errors (e.g., Configuration Required)
+            if (phoneNumber && "error" in (phoneNumber as any)) {
+              return (
+                <TableRow>
+                  <TableCell
+                    colSpan={3}
+                    className="px-6 py-8 text-center text-destructive font-medium"
+                  >
+                    {(phoneNumber as any).message}
+                  </TableCell>
+                </TableRow>
+              );
+            }
+
+            const phoneList = Array.isArray(phoneNumber) ? phoneNumber : [];
+
+            if (phoneList.length === 0) {
               return (
                 <TableRow>
                   <TableCell
@@ -63,7 +73,7 @@ const VapiPhoneTab = () => {
               );
             }
 
-            return phoneNumber.map((phone) => (
+            return phoneList.map((phone) => (
               <TableRow className="hover:bg-muted/50" key={phone.id}>
                 <TableCell className="px-6 py-4">
                   <div className="flex items-center gap-3">

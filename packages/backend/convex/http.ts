@@ -57,20 +57,24 @@ http.route({
     const payloadString = new TextDecoder().decode(payloadBuffer);
     const payload = JSON.parse(payloadString);
 
-    // Vapi sends tool-calls in message.toolCalls
-    if (payload.message?.type === "tool-calls") {
+    const msgType = payload.message?.type;
+    console.log(`[Vapi Webhook] Type: ${msgType}`);
+
+    // ── 1. Tool Calls ──────────────────────────────────────────────────────
+    if (msgType === "tool-calls") {
       const toolCalls = payload.message.toolCalls;
       const assistantId = payload.message.assistant?.id;
 
       const results = await Promise.all(
         toolCalls.map(async (toolCall: any) => {
           if (toolCall.function.name === "search_knowledge_base") {
-            const args = typeof toolCall.function.arguments === "string"
-              ? JSON.parse(toolCall.function.arguments)
-              : toolCall.function.arguments;
+            const args =
+              typeof toolCall.function.arguments === "string"
+                ? JSON.parse(toolCall.function.arguments)
+                : toolCall.function.arguments;
             const { result } = await ctx.runAction(api.public.vapi.search, {
               assistantId,
-              query: args.query, 
+              query: args.query,
             });
             return {
               toolCallId: toolCall.id,
@@ -87,6 +91,122 @@ http.route({
       return new Response(JSON.stringify({ results }), {
         status: 200,
         headers: { "Content-Type": "application/json" },
+      });
+    }
+
+    // ── 2. End-of-Call Report  (PRIMARY save mechanism) ────────────────────
+    // Vapi sends the complete transcript here when the call ends.
+    if (msgType === "end-of-call-report") {
+      const report = payload.message;
+      const assistantId =
+        report?.assistant?.id ||
+        report?.call?.assistantId ||
+        payload.call?.assistantId;
+      const vapiCallId = report?.call?.id || payload.call?.id;
+
+      if (!assistantId || !vapiCallId) {
+        console.warn("[Vapi EoC] Missing assistantId or callId", {
+          assistantId,
+          vapiCallId,
+        });
+        return new Response(JSON.stringify({ message: "Missing IDs" }), {
+          status: 200,
+        });
+      }
+
+      // The transcript is in report.artifact.messages or report.messages
+      const rawMessages: any[] =
+        report?.artifact?.messages ||
+        report?.messages ||
+        [];
+
+      // Normalize to { role, content }
+      const messages = rawMessages
+        .filter(
+          (m: any) =>
+            (m.role === "user" || m.role === "assistant" || m.role === "bot") &&
+            typeof m.content === "string" &&
+            m.content.trim().length > 0
+        )
+        .map((m: any) => ({
+          role: m.role as "user" | "assistant" | "bot",
+          content: m.content as string,
+        }));
+
+      console.log(
+        `[Vapi EoC] CallId: ${vapiCallId}, Messages: ${messages.length}`
+      );
+
+      if (messages.length > 0) {
+        await ctx.runMutation(internal.system.vapi.saveVapiCallTranscript, {
+          assistantId,
+          vapiCallId,
+          messages,
+        });
+      }
+
+      return new Response(JSON.stringify({ message: "End-of-call processed" }), {
+        status: 200,
+      });
+    }
+
+    // ── 3. Real-time Transcript (live per-utterance saving) ─────────────────
+    if (
+      msgType === "transcript" &&
+      payload.message?.transcriptType === "final"
+    ) {
+      const { role, transcript, call: messageCall, assistant } =
+        payload.message;
+
+      const vapiCallId = messageCall?.id || payload.call?.id;
+      const assistantId = assistant?.id || payload.call?.assistantId;
+
+      if (!vapiCallId || !assistantId) {
+        console.warn("[Vapi Transcript] Missing callId or assistantId");
+        return new Response(JSON.stringify({ message: "Missing IDs" }), {
+          status: 200,
+        });
+      }
+
+      console.log(
+        `[Vapi Transcript] Role: ${role}, CallId: ${vapiCallId}, AssistantId: ${assistantId}`
+      );
+
+      await ctx.runMutation(internal.system.vapi.saveVapiMessage, {
+        assistantId,
+        vapiCallId,
+        role: role as "user" | "assistant" | "bot",
+        content: transcript,
+      });
+
+      return new Response(JSON.stringify({ message: "Transcript saved" }), {
+        status: 200,
+      });
+    }
+
+    // ── 4. Conversation Update (first-message sync) ─────────────────────────
+    if (msgType === "conversation-update") {
+      const { messages, call: messageCall, assistant } = payload.message;
+      const vapiCallId = messageCall?.id || payload.call?.id;
+      const assistantId = assistant?.id;
+
+      if (messages && messages.length > 0 && vapiCallId && assistantId) {
+        const firstMessage = messages[0];
+        if (
+          firstMessage.role === "assistant" ||
+          firstMessage.role === "bot"
+        ) {
+          await ctx.runMutation(internal.system.vapi.saveVapiMessage, {
+            assistantId,
+            vapiCallId,
+            role: "assistant",
+            content: firstMessage.content,
+          });
+        }
+      }
+
+      return new Response(JSON.stringify({ message: "Sync processed" }), {
+        status: 200,
       });
     }
 

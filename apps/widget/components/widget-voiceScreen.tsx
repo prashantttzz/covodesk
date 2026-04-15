@@ -42,8 +42,6 @@ const WidgetVoiceScreen = () => {
       : "skip"
   );
 
-  const createMessage = useAction(api.public.messages.messages);
-
   const {
     transcript,
     isSpeaking,
@@ -52,18 +50,7 @@ const WidgetVoiceScreen = () => {
     endCall,
     connecting,
     partialTranscript,
-  } = useVapi((message) => {
-    if (conversation?.threadId && contactSessionId) {
-      // We don't await this as we want the UI to remain responsive
-      createMessage({
-        threadId: conversation.threadId,
-        prompt: message.text,
-        contactSessionId,
-      }).catch((err) => {
-        console.error("Failed to sync voice message to Convex:", err);
-      });
-    }
-  });
+  } = useVapi();
 
   return (
     <>
@@ -102,7 +89,6 @@ const WidgetVoiceScreen = () => {
           </AIConversationContent>
           <AIConversationScrollButton />
         </AIConversation>
-
       ) : (
         <div className="flex flex-col items-center justify-center h-full flex-1 gap-y-4">
           <div className="flex items-center justify-center rounded-full border bg-white p-3">
@@ -141,9 +127,16 @@ const WidgetVoiceScreen = () => {
             ) : (
               <Button
                 className="w-full"
-                disabled={connected ||connecting}
+                disabled={connected || connecting || !conversation}
                 size="lg"
-                onClick={() => startCall()}
+                onClick={() =>
+                  startCall({
+                    metadata: {
+                      threadId: conversation?.threadId,
+                      conversationId: conversation?._id,
+                    },
+                  })
+                }
               >
                 {connecting ? (
                   <Loader className="animate-spin" />

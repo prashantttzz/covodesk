@@ -57,11 +57,11 @@ const Conversation = ({
     },
   });
 
-  const createMessages = useMutation(api.private.messages.messages);
+  const sendReply = useAction(api.private.messages.sendReply);
 
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
     try {
-      await createMessages({
+      await sendReply({
         conversationId,
         prompt: values.message,
       });
@@ -100,7 +100,7 @@ const Conversation = ({
       ),
     [messages.results]
   );
-
+  console.log("mess",messages)
   const { topElementRef, canLoadMore, handleLoadMore, isLoadingMore } =
     useInfinteScroll({
       status: messages.status,

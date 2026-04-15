@@ -20,24 +20,31 @@ export const getAssistant = action({
         message: "organizationID not found",
       });
     }
-    const plugin = await ctx.runQuery(
-      internal.system.plugins.getByOrganizationIdAndService,
-      { organizationId: org, service: "vapi" }
-    );
-    if (!plugin) {
-      throw new ConvexError({
-        code: "NOT_FOUND",
-        message: "plugin not found",
-      });
-    }
-    const secretData = {
-      publicApiKey: "49f19367-ea0f-4e74-9325-0c43dd396b62 ",
-      privateApiKey: "9717a7ec-982b-488f-9880-abaad863d40f", // Using public key as fallback/placeholder if private is not provided
-    };
 
-    const vapiClient = new VapiClient({ token: secretData.privateApiKey });
-    const assistants = await vapiClient.assistants.list();
-    return assistants;
+    // 1. Get Vapi Secret (native Convex query)
+    const secret = (await ctx.runQuery(internal.system.secret.get, {
+      organizationId: org,
+      service: "vapi",
+    })) as { privateApiKey: string } | null;
+
+    if (!secret?.privateApiKey) {
+      return {
+        error: "Configuration Required",
+        message: "Please add your Vapi API keys in the Integration settings.",
+      };
+    }
+
+    try {
+      const vapiClient = new VapiClient({ token: secret.privateApiKey });
+      const assistants = await vapiClient.assistants.list();
+      return assistants;
+    } catch (error) {
+      console.error("Vapi Error:", error);
+      return {
+        error: "Vapi API Error",
+        message: "Unable to connect to Vapi. Please check your API keys.",
+      };
+    }
   },
 });
 
@@ -58,24 +65,31 @@ export const getPhoneNumber = action({
         message: "organizationID not found",
       });
     }
-    const plugin = await ctx.runQuery(
-      internal.system.plugins.getByOrganizationIdAndService,
-      { organizationId: org, service: "vapi" }
-    );
-    if (!plugin) {
-      throw new ConvexError({
-        code: "NOT_FOUND",
-        message: "plugin not found",
-      });
-    }
-    const secretData = {
-      publicApiKey: "308107ef-f15f-409c-9f93-5182903f5686",
-      privateApiKey: "308107ef-f15f-409c-9f93-5182903f5686",
-    };
 
-    const vapiClient = new VapiClient({ token: secretData.privateApiKey });
-    const phoneNumbers = await vapiClient.phoneNumbers.list();
-    return phoneNumbers;
+    // 1. Get Vapi Secret (native Convex query)
+    const secret = (await ctx.runQuery(internal.system.secret.get, {
+      organizationId: org,
+      service: "vapi",
+    })) as { privateApiKey: string } | null;
+
+    if (!secret?.privateApiKey) {
+      return {
+        error: "Configuration Required",
+        message: "Please add your Vapi API keys in the Integration settings.",
+      };
+    }
+
+    try {
+      const vapiClient = new VapiClient({ token: secret.privateApiKey });
+      const phoneNumbers = await vapiClient.phoneNumbers.list();
+      return phoneNumbers;
+    } catch (error) {
+      console.error("Vapi Error:", error);
+      return {
+        error: "Vapi API Error",
+        message: "Unable to connect to Vapi. Please check your API keys.",
+      };
+    }
   },
 });
 
@@ -171,6 +185,13 @@ export const configureKnowledgeBase = action({
       server: {
         url: serverUrl,
       },
+      serverMessages: [
+        "transcript",
+        "tool-calls",
+        "status-update",
+        "end-of-call-report",
+        "conversation-update",
+      ],
       ...(modelUpdate ? { model: modelUpdate } : {}),
     });
 

@@ -71,7 +71,22 @@ const VapiAssistantTab = () => {
                 </TableRow>
               );
             }
-            if (assistants.length === 0) {
+            if (assistants && "error" in (assistants as any)) {
+              return (
+                <TableRow>
+                  <TableCell
+                    colSpan={4}
+                    className="px-6 py-8 text-center text-destructive font-medium"
+                  >
+                    {(assistants as any).message}
+                  </TableCell>
+                </TableRow>
+              );
+            }
+
+            const assistantsList = Array.isArray(assistants) ? assistants : [];
+
+            if (assistantsList.length === 0) {
               return (
                 <TableRow>
                   <TableCell
@@ -84,7 +99,7 @@ const VapiAssistantTab = () => {
               );
             }
 
-            return assistants.map((assistant) => (
+            return assistantsList.map((assistant) => (
               <TableRow className="hover:bg-muted/50" key={assistant.id}>
                 <TableCell className="px-6 py-4">
                   <div className="flex items-center gap-3">

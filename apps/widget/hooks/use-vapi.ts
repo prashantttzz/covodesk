@@ -67,13 +67,13 @@ export const useVapi = (
     };
   }, []);
 
-  const startCall = () => {
+  const startCall = (assistantOverrides?: any) => {
     if (!vapiSecrets || !widgetSettings?.vapiSettings.assistantId) {
       return;
     }
     setConnecting(true);
     if (vapi) {
-      vapi.start(widgetSettings.vapiSettings.assistantId);
+      vapi.start(widgetSettings.vapiSettings.assistantId, assistantOverrides);
     }
   };
   const endCall = () => {

@@ -44,6 +44,7 @@ const WidgetSelectionScreen = () => {
       const conversationId = await createConversation({
         organizationId,
         contactSessionId,
+        type: target,
       });
       setConversationId(conversationId)
       setScreen(target);

@@ -36,6 +36,7 @@ import type * as system_subscription from "../system/subscription.js";
 import type * as system_tools_escalateConversation from "../system/tools/escalateConversation.js";
 import type * as system_tools_resolveConversation from "../system/tools/resolveConversation.js";
 import type * as system_tools_searchTool from "../system/tools/searchTool.js";
+import type * as system_vapi from "../system/vapi.js";
 import type * as system_widgetSetting from "../system/widgetSetting.js";
 import type * as users from "../users.js";
 
@@ -74,6 +75,7 @@ declare const fullApi: ApiFromModules<{
   "system/tools/escalateConversation": typeof system_tools_escalateConversation;
   "system/tools/resolveConversation": typeof system_tools_resolveConversation;
   "system/tools/searchTool": typeof system_tools_searchTool;
+  "system/vapi": typeof system_vapi;
   "system/widgetSetting": typeof system_widgetSetting;
   users: typeof users;
 }>;
