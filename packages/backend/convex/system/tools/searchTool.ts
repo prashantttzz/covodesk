@@ -29,12 +29,28 @@ export const search = createTool({
     const searchResult = await rag.search(ctx, {
       namespace: orgId,
       query: args.query,
+      searchType: "hybrid",
+      chunkContext: { before: 2, after: 1 },
       limit: 5,
     });
+    const entryContext = searchResult.entries
+      .map((e: any) => {
+        const title = e.title ? `${e.title}\n` : "";
+        const text = typeof e.text === "string" ? e.text.trim() : "";
+        return `${title}${text}`.trim();
+      })
+      .filter((text: string) => text.length > 0)
+      .join("\n\n---\n\n");
+    const combinedContext = searchResult.text?.trim() || entryContext;
+
+    if (!combinedContext) {
+      return "I couldn't find specific information about that in our knowledge base. Would you like me to connect you with a human support agent who can help?";
+    }
+
     const contextText = `found result in ${searchResult.entries
       .map((e: any) => e.title || null)
       .filter((t: any) => t !== null)
-      .join(", ")}. here is the context \n\n${searchResult.text}`;
+      .join(", ")}. here is the context \n\n${combinedContext}`;
     const response = await generateText({
       messages: [
         {

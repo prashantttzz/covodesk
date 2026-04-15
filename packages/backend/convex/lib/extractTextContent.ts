@@ -43,7 +43,7 @@ export async function ExtractTextContent(
     return extractImageText(url);
   }
   if (mimeType.toLowerCase().includes("pdf")) {
-    return extractPdfText(url, mimeType, fileName);
+    return extractPdfText(mimeType, fileName, url);
   }
   if (mimeType.toLowerCase().includes("text")) {
     return extractTextFileContent(ctx, storageId, bytes, mimeType);

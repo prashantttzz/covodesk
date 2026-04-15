@@ -4,7 +4,7 @@ import { components } from "../../_generated/api.js";
 
 export const rag = new RAG(components.rag, {
   textEmbeddingModel: google.embedding("gemini-embedding-001"),
-  embeddingDimension: 768,
+  embeddingDimension: 3072,
 
 });
 
