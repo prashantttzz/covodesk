@@ -18,7 +18,13 @@ export default defineSchema({
       assistantId: v.optional(v.string()),
       phoneNumber: v.optional(v.string()),
     }),
-  }).index("by_organization_id", ["organizationId"]),
+  })
+    .index("by_organization_id", ["organizationId"])
+    .index("by_vapi_assistant_id", ["vapiSettings.assistantId"]),
+  secrets: defineTable({
+    name: v.string(), // identifier, e.g., "tenant/orgId/vapi"
+    value: v.any(),   // the sensitive configuration
+  }).index("by_name", ["name"]),
   plugins: defineTable({
     organizationId: v.string(),
     service: v.union(v.literal("vapi")),

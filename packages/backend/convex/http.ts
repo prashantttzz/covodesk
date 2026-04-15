@@ -3,7 +3,7 @@ import { Webhook } from "svix";
 import { createClerkClient } from "@clerk/backend";
 import type { WebhookEvent } from "@clerk/backend";
 import { httpAction } from "./_generated/server.js";
-import { internal } from "./_generated/api.js";
+import { api, internal } from "./_generated/api.js";
 
 const clerkClient = createClerkClient({
   secretKey: process.env.CLERK_SECRET_KEY,
@@ -46,6 +46,53 @@ http.route({
         console.log("ignore clerk webhook", event.type);
     }
     return new Response(null, { status: 200 });
+  }),
+});
+
+http.route({
+  path: "/vapi",
+  method: "POST",
+  handler: httpAction(async (ctx, request) => {
+    const payloadBuffer = await request.arrayBuffer();
+    const payloadString = new TextDecoder().decode(payloadBuffer);
+    const payload = JSON.parse(payloadString);
+
+    // Vapi sends tool-calls in message.toolCalls
+    if (payload.message?.type === "tool-calls") {
+      const toolCalls = payload.message.toolCalls;
+      const assistantId = payload.message.assistant?.id;
+
+      const results = await Promise.all(
+        toolCalls.map(async (toolCall: any) => {
+          if (toolCall.function.name === "search_knowledge_base") {
+            const args = typeof toolCall.function.arguments === "string"
+              ? JSON.parse(toolCall.function.arguments)
+              : toolCall.function.arguments;
+            const { result } = await ctx.runAction(api.public.vapi.search, {
+              assistantId,
+              query: args.query, 
+            });
+            return {
+              toolCallId: toolCall.id,
+              result: result || "No information found.",
+            };
+          }
+          return {
+            toolCallId: toolCall.id,
+            error: "Tool not found",
+          };
+        })
+      );
+
+      return new Response(JSON.stringify({ results }), {
+        status: 200,
+        headers: { "Content-Type": "application/json" },
+      });
+    }
+
+    return new Response(JSON.stringify({ message: "Event ignored" }), {
+      status: 200,
+    });
   }),
 });
 

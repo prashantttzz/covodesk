@@ -12,13 +12,32 @@ import {
   PhoneIcon,
   XCircleIcon,
 } from "lucide-react";
-import React from "react";
+import React, { useState } from "react";
 import { toast } from "sonner";
 import { useVapiAssistant } from "../hooks/use-vapi-data";
+import { useAction } from "convex/react";
+import { api } from "@workspace/backend/_generated/api";
+import { Button } from "@workspace/ui/components/button";
+import { DatabaseIcon, Loader2Icon } from "lucide-react";
 
 const VapiAssistantTab = () => {
   const { data: assistants, isLoading } = useVapiAssistant();
-  console.log("ass",assistants)
+  const configureKnowledgeBase = useAction(api.private.vapi.configureKnowledgeBase);
+  const [configuringId, setConfiguringId] = useState<string | null>(null);
+
+  const handleLinkKnowledgeBase = async (assistantId: string) => {
+    try {
+      setConfiguringId(assistantId);
+      await configureKnowledgeBase({ assistantId });
+      toast.success("Knowledge base linked successfully");
+    } catch (error) {
+      console.error(error);
+      toast.error("Failed to link knowledge base");
+    } finally {
+      setConfiguringId(null);
+    }
+  };
+
   const copyToClipboard = async (text: string) => {
     try {
       await navigator.clipboard.writeText(text);
@@ -35,6 +54,7 @@ const VapiAssistantTab = () => {
             <TableHead className="px-6 py-4 ">Assistant</TableHead>
             <TableHead className="px-6 py-4 ">Model</TableHead>
             <TableHead className="px-6 py-4 ">First Message</TableHead>
+            <TableHead className="px-6 py-4 ">Knowledge Base</TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
@@ -43,7 +63,7 @@ const VapiAssistantTab = () => {
               return (
                 <TableRow>
                   <TableCell
-                    colSpan={3}
+                    colSpan={4}
                     className="px-6 py-8 text-center text-muted-foreground"
                   >
                     Loading assistants...
@@ -55,7 +75,7 @@ const VapiAssistantTab = () => {
               return (
                 <TableRow>
                   <TableCell
-                    colSpan={3}
+                    colSpan={4}
                     className="px-6 py-8 text-center text-muted-foreground"
                   >
                     no assistant configured..
@@ -75,14 +95,29 @@ const VapiAssistantTab = () => {
                   </div>
                 </TableCell>
                 <TableCell className="px-6 py-4">
-              <Badge className="glass-light p-1 text-white">
+                  <Badge className="glass-light p-1 text-white">
                     {assistant?.model?.model || ""}
-              </Badge>
+                  </Badge>
                 </TableCell>
                 <TableCell className="px-6 py-4 truncate">
-<span className="truncate">
-                 {assistant?.firstMessage}
-  </span>                </TableCell>
+                  <span className="truncate">{assistant?.firstMessage}</span>{" "}
+                </TableCell>
+                <TableCell className="px-6 py-4">
+                  <Button
+                    size="sm"
+                    variant="outline"
+                    className="gap-2"
+                    onClick={() => handleLinkKnowledgeBase(assistant.id)}
+                    disabled={configuringId === assistant.id}
+                  >
+                    {configuringId === assistant.id ? (
+                      <Loader2Icon className="size-4 animate-spin" />
+                    ) : (
+                      <DatabaseIcon className="size-4" />
+                    )}
+                    Link KB
+                  </Button>
+                </TableCell>
               </TableRow>
             ));
           })()}
