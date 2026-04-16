@@ -27,6 +27,10 @@ const VapiFormField = ({ form }: vapiFormFieldProps) => {
   const { data: phoneNumber, isLoading: phoneNumberLoading } =
     useVapiPhoneNumber();
   const disabled = form.formState.isSubmitting;
+
+  const assistantList = Array.isArray(assistant) ? assistant : [];
+  const phoneNumberList = Array.isArray(phoneNumber) ? phoneNumber : [];
+
   return (
     <>
       <FormField
@@ -53,7 +57,7 @@ const VapiFormField = ({ form }: vapiFormFieldProps) => {
               </FormControl>
               <SelectContent>
                 <SelectItem value="none">None</SelectItem>
-                {assistant.map((assist) => (
+                {assistantList.map((assist) => (
                   <SelectItem key={assist.id} value={assist.id}>
                     {assist.name || "unnamed assistant"} -{" "}
                     {assist.model?.model || "unkown model"}
@@ -92,7 +96,7 @@ const VapiFormField = ({ form }: vapiFormFieldProps) => {
               </FormControl>
               <SelectContent>
                 <SelectItem value="none">None</SelectItem>
-                {phoneNumber.map((phone) => (
+                {phoneNumberList.map((phone) => (
                   <SelectItem key={phone.id} value={phone.id}>
                     {phone.number || "-"} -{" "}
                     {phone.name || "unnamed phone number"}
